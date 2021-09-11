@@ -5,6 +5,8 @@ date:   2021-09-04 08:18:45 +0600
 categories: welcome
 ---
 
+﷽
+
 Welcome to my cybersecurity and security engineering tutorials!
 
 I will describe the techniques for the successful work of the red team, notes on penetration tests and programming exploits.
