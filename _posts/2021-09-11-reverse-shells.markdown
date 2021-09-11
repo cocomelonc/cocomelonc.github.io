@@ -36,7 +36,7 @@ Depending on which system is installed on the victim and what services are runni
 
 ## listener
 
-For simplicity, in this example, the victim allow outgoing port on any port (default iptables firewall rule). In our case we use `4444` as a listener port. You can change it to your preferable port you like. Listener could be any program/utility that can open TCP/UDP connections or sockets. In most cases I like to use `nc` or `netcat` utility.
+For simplicity, in this example, the victim allow outgoing connection on any port (default iptables firewall rule). In our case we use `4444` as a listener port. You can change it to your preferable port you like. Listener could be any program/utility that can open TCP/UDP connections or sockets. In most cases I like to use `nc` or `netcat` utility.
 
 ```bash
 nc -lvp 4444
@@ -180,4 +180,5 @@ check:
 Unfortunately, there is no way to completely block reverse shells. Unless you are deliberately using reverse shells for remote administration, any reverse shell connections are likely to be malicious. To limit exploitation, you can lock down outgoing connectivity to allow only specific remote IP addresses and ports for the required services. This might be achieved by sandboxing or running the server in a minimal container.
 
 I hope this post was at least a little useful for entry level cyber security specialists (and possibly even professionals).  
-Thanks for your time and good bye!
+Thanks for your time and good bye!   
+*PS. All drawings are mine*
