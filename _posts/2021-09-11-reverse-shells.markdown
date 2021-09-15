@@ -183,4 +183,4 @@ Unfortunately, there is no way to completely block reverse shells. Unless you ar
 
 I hope this post was at least a little useful for entry level cyber security specialists (and possibly even professionals).  
 Thanks for your time and good bye!   
-*PS. All drawings are mine*
+*PS. All drawings and screenshots are mine*

@@ -350,4 +350,5 @@ I think this post will be useful both for red teamers to bypass anti-virus prote
 - [WSAConnect](https://docs.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-wsaconnect)
 - [Creating Processes](https://docs.microsoft.com/en-us/windows/win32/procthread/creating-processes)
 
-Thanks for your time, and good bye!
+Thanks for your time, and good bye!   
+*PS. All drawings and screenshots are mine*
