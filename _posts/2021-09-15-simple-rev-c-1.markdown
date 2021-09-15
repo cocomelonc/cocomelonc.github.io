@@ -9,6 +9,8 @@ categories: tutorial
 
 Hello, cybersecurity enthusiasts and white hackers!
 
+![AES encrypt](/assets/images/5/2021-09-15_15-16.png){:class="img-responsive"}
+
 This post is a practical case for educational purpose only.
 
 When working on one of my projects on [github](https://github.com/cocomelonc/peekaboo), I was advised to look towards AES encryption.
