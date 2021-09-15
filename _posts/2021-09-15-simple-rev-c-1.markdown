@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Simple C++ reverse shell for windows"
-date:   2021-09-15 00:15:00 +0600
+date:   2021-09-15 10:00:00 +0600
 categories: tutorial
 ---
 
