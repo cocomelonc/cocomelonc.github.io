@@ -65,7 +65,7 @@ where `10.9.1.6` is your attacker's machine IP and `4444` is listening port.
 
 ![netcat](/assets/images/4/2021-09-11_18-04.png){:class="img-responsive"}
 
-**2. netcat without -e**
+**2. netcat without -e**    
 Newer linux machine by default has traditional netcat with `GAPING_SECURITY_HOLE` disabled, it means you don't have the `-e` option of netcat.
 
 In this case, in the victim machine run:
