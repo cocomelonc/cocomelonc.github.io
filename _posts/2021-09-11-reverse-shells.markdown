@@ -9,6 +9,8 @@ categories: tutorial
 
 Hello, cybersecurity enthusiasts and white hackers!
 
+![reverse shells](/assets/images/4/2021-09-16_11-26.png){:class="img-responsive"}
+
 ## what is reverse shell?
 
 Reverse shell or often called connect-back shell is remote shell introduced from the target by connecting back to the attacker machine and spawning target shell on the attacker machine. This usually used during exploitation process to gain control of the remote machine.
