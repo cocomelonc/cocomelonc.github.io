@@ -28,6 +28,6 @@ int main() {
 }
 ```
 
-If you have questions, you can ask them on my [email](zhzhussupovkz@gmail.com).
+If you have questions, you can ask them on my [email](mailto:zhzhussupovkz@gmail.com).
 
 My Github repo: [https://github.com/cocomelonc](https://github.com/cocomelonc)
