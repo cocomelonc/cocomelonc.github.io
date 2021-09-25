@@ -1,14 +1,8 @@
 ---
-title:  "Welcome to my cybersecurity path"
+layout: post
+title:  "Welcome to cybersecurity path"
 date:   2021-09-04 08:18:45 +0600
-header:
-  teaser: "/assets/images/2/2021-09-16_11-09.png"
-categories: 
-  - tutorial
-tags:
-  - redteam
-  - pentest
-  - malware
+categories: welcome
 ---
 
 ﷽

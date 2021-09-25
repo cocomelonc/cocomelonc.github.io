@@ -1,17 +1,9 @@
 ---
+layout: post
 title:  "Simple C++ reverse shell for windows"
 date:   2021-09-15 10:00:00 +0600
-header:
-  teaser: "/assets/images/5/2021-09-15_15-16.png"
-categories: 
-  - tutorial
-tags:
-  - red team
-  - windows
-  - pentest
-  - malware
+categories: tutorial
 ---
-
 
 ﷽
 

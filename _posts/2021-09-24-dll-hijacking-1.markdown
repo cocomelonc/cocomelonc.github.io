@@ -1,14 +1,8 @@
 ---
+layout: post
 title:  "DLL hijacking in Windows. Simple C example."
 date:   2021-09-24 10:00:00 +0600
-header:
-  teaser: "/assets/images/8/2021-09-25_12-09.png"
-categories: 
-  - pentest
-tags:
-  - dllhijack
-  - windows
-  - privesc
+categories: pentest
 ---
 
 ﷽
