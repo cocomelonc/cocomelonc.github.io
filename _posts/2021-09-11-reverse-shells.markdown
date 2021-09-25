@@ -1,8 +1,15 @@
 ---
-layout: post
 title:  "Reverse shells"
 date:   2021-09-11 10:00:00 +0600
-categories: tutorial
+header:
+  teaser: "/assets/images/4/2021-09-16_11-26.png"
+categories: 
+  - tutorial
+tags:
+  - red team
+  - windows
+  - pentest
+  - malware
 ---
 
 ﷽
