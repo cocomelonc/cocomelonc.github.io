@@ -155,7 +155,7 @@ Further, all steps are similar.
 
 But in all cases, there is a caveat.
 
-Note that in some cases the Dll you compile must export multiple functions to be loaded by the victim process. If these functions do not exist, the binary will not be able to load them and the exploit will fail.
+Note that in some cases the DLL you compile must export multiple functions to be loaded by the victim process. If these functions do not exist, the binary will not be able to load them and the exploit will fail.
 
 So, compiling custom versions of existing DLLs is more challenging than it may sound, as a lot of executables will not load such DLLs if procedures or entry points are missing. Tools such as [DLL Export Viewer](https://www.nirsoft.net/utils/dll_export_viewer.html) can be used to enumerate all external function names and ordinals of the legitimate DLLs. Ensuring that our compiled DLL follows the same format will maximise the chances of it being loaded successfully.
 
