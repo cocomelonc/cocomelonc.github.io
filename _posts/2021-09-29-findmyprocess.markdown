@@ -16,6 +16,9 @@ Hello, cybersecurity enthusiasts and white hackers!
 
 ![find my process](/assets/images/9/2021-09-30_00-01.png){:class="img-responsive"}
 
+This post is a Proof of Concept and is for educational purposes only.   
+Author takes no responsibility of any damage you cause.
+
 When I was writing my injector, I wondered how, for example, to find processes by name?   
 
 When writing code or DLL injectors, it would be nice to find, for example, all processes running in the system and try to inject into the process launched by the administrator.
