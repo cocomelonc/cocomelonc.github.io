@@ -48,6 +48,24 @@ int main(int argc, char **argv) {
 
 Knowledge of C and Assembly is highly recommend. Also knowing how the stack works is a big plus. You can ofcourse try to learn what they mean from this tutorial, but it’s better to take your time to learn about these from a more in depth source.         
 
+### Disable ASLR
+Address Space Layout Randomization (ASLR) is a security features used in most operating system today. ASLR randomly arranges the address spaces of processes, including stack, heap, and libraries. It provides a mechanism for making the exploitation hard to success. You can configure ASLR in Linux using the `/proc/sys/kernel/randomize_va_space` interface.
+
+The following values are supported:
+* 0 - no randomization
+* 1 - convervative randomization
+* 2 - full randomization
+
+To disable ASLR, run:
+```bash
+echo 0 > /proc/sys/kernel/randomize_va_space
+```
+
+enable ASLR, run:
+```bash
+echo 2 > /proc/sys/kernel/randomize_va_space 
+```
+
 ### Some assembly
 
 Firstly, let's repeat some more introductory information, please be patient.     
@@ -270,6 +288,8 @@ echo $?
 ```
 
 ![example1 shellcode](/assets/images/12/2021-10-11_11-01.png){:class="img-responsive"}    
+
+> `-z execstack` Turn off the NX protection to make the stack executable
 
 Our program returned 0 instead of 1, so our shellcode worked.     
 
