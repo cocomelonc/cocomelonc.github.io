@@ -53,7 +53,7 @@ Address Space Layout Randomization (ASLR) is a security features used in most op
 
 The following values are supported:
 * 0 - no randomization
-* 1 - convervative randomization
+* 1 - conservative randomization
 * 2 - full randomization
 
 To disable ASLR, run:
