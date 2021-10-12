@@ -18,7 +18,7 @@ Hello, cybersecurity enthusiasts and white hackers!
 
 ![linux shellcoding](/assets/images/12/2021-10-11_01-00.png){:class="img-responsive"}          
 
-### Shellcode
+### shellcode
 
 Writing shellcode is an excellent way to learn more about assembly language and how a program communicates with the underlying OS.         
 
@@ -26,7 +26,7 @@ Why are we red teamers and penetration testers writing shellcode? Because in rea
 
 Why the name "shellcode"? Historically, shellcode is machine code that when executed spawns a shell.        
 
-### Testing shellcode     
+### testing shellcode     
 
 When testing shellcode, it is nice to just plop it into a program and let it run. The C program below will be used to test all of our code (`run.c`):           
 ```cpp
@@ -48,7 +48,7 @@ int main(int argc, char **argv) {
 
 Knowledge of C and Assembly is highly recommend. Also knowing how the stack works is a big plus. You can ofcourse try to learn what they mean from this tutorial, but it’s better to take your time to learn about these from a more in depth source.         
 
-### Disable ASLR
+### disable ASLR
 Address Space Layout Randomization (ASLR) is a security features used in most operating system today. ASLR randomly arranges the address spaces of processes, including stack, heap, and libraries. It provides a mechanism for making the exploitation hard to success. You can configure ASLR in Linux using the `/proc/sys/kernel/randomize_va_space` interface.
 
 The following values are supported:
@@ -66,7 +66,7 @@ enable ASLR, run:
 echo 2 > /proc/sys/kernel/randomize_va_space 
 ```
 
-### Some assembly
+### some assembly
 
 Firstly, let's repeat some more introductory information, please be patient.     
 
@@ -123,7 +123,7 @@ gdb -q ./exit0
 
 `0xfc = exit_group()` and `0x1 = exit()`
 
-### Nullbytes
+### nullbytes
 
 First of all, I want to draw your attention to nullbytes.      
 Let's go to investigate simple program:      
@@ -225,7 +225,7 @@ As I wrote earlier, the EAX register has AX, AH, and AL. AX is used to access th
 
 Both these programs are functionally equivalent.           
 
-### Example1. Normal exit
+### example1. normal exit
 
 Let's begin with simplest example. Let's use our `exit.asm` code as the first example for shellcoding (`example1.asm`):
 ```nasm
@@ -293,7 +293,7 @@ echo $?
 
 Our program returned 0 instead of 1, so our shellcode worked.     
 
-### Example2. Spawning a linux shell.
+### example2. spawning a linux shell.
 
 Let's go to writing a simple shellcode that spawns a shell (`example2.asm`):       
 ```nasm
