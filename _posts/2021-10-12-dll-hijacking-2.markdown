@@ -299,7 +299,7 @@ Then naming the file "cscapi.dll" and placing it in the directory where Microsof
 
 ![run MS teams with malicious dll](/assets/images/13/2021-10-12_15-07.png){:class="img-responsive"}    
 
-After we close pop-up Microsoft Teams work corretly, not crashed:
+After we close pop-up Microsoft Teams work correctly, not crashed:
 
 ![not crashed ms teams](/assets/images/13/2021-10-12_15-13.png){:class="img-responsive"}    
 
