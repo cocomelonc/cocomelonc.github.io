@@ -408,11 +408,14 @@ x86_64-w64-mingw32-gcc -shared -o evil2.dll evil2.c cscapi.def -s
 
 ![compile shellcode](/assets/images/13/2021-10-13_08-22.png){:class="img-responsive"}    
 
-After replace target DLL, we can start Microsoft Teams to see if everything is working as expected:                        
+After replace target DLL, prepare listener on attacker's machine, we can start Microsoft Teams to see if everything is working as expected:                        
 
 ![msfvenom shellcode](/assets/images/13/2021-10-13_08-30.png){:class="img-responsive"}    
 
 Microsoft Teams will continue working as normal without any crashes!
+
+![windows defender](/assets/images/13/2021-10-13_08-28.png){:class="img-responsive"}    
+> Windows Defender antivirus reacted at my DLL 
 
 ### Conclusion
 
