@@ -5,7 +5,9 @@ permalink: /about/
 author_profile: true
 ---
 
-The cybersecurity and security engineering tutorials.
+The cybersecurity and security engineering tutorials:           
+
+![MS teams](/assets/images/home.png){:class="img-responsive"}      
 
 I am a software developer, ethical hacker and cyber security enthusiast, mathematician. Love my wife and son. 
 
