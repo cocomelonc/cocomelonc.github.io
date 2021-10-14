@@ -436,6 +436,7 @@ A simple way to prevent DLL hijacking from happening would be for applications t
 - [WriteProcessMemory](https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-writeprocessmemory)                 
 - [CreateThread](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createthread)        
 - [CloseHandle](https://docs.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle)           
+- [msfvenom](https://www.offensive-security.com/metasploit-unleashed/msfvenom/)             
 
 Thanks for your time, happy hacking and good bye!    
 *PS. All drawings and screenshots are mine*
