@@ -83,7 +83,7 @@ gdb-peda$ r $(python3 -c 'print("A" * 400)')
 ![buffer overflow 3](/assets/images/15/2021-10-20_00-35.png){:class="img-responsive"}          
 ![buffer overflow 4](/assets/images/15/2021-10-20_00-37.png){:class="img-responsive"}          
 
-"A" in hex are 0x41. As you can see due to supplying multiple "A"'s into the program buffer, they overflowed the stack and ended up in the `eip` register. The memory buffer has been filled and exceed. As we can see in the code above the buffer has a 128 bytes size. Now we need to find the offset for overwriting the `eip` register.      
+"A" in hex are `0x41`. As you can see due to supplying multiple "A"'s into the program buffer, they overflowed the stack and ended up in the `eip` register. The memory buffer has been filled and exceed. As we can see in the code above the buffer has a 256 bytes size. Now we need to find the offset for overwriting the `eip` register.      
 
 There are various methods to calculate the offset from the beginning of the buffer to the `eip`. There are the `pattern_create.rb` and `pattern_offset.rb` tools shipped with `metasploit`. Also, pattern create is one of the PEDA utilities. They both work in the same way - creating a pattern of a unique string of a given length.     
 
