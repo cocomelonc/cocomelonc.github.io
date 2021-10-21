@@ -263,7 +263,7 @@ Then, finally, prepare listener on port `4444` and run:
 
 So, everything is worked perfectly :)
 
-> This is a practical case for educational purpose only.      
+> This is a practical case for educational purposes only.      
 
 [owasp buffer overflow attack](https://owasp.org/www-community/attacks/Buffer_overflow_attack)           
 [exploit-db tutorial](https://www.exploit-db.com/docs/english/28475-linux-stack-based-buffer-overflows.pdf)                
