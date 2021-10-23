@@ -265,6 +265,8 @@ So, everything is worked perfectly :)
 
 > This is a practical case for educational purposes only.      
 
+[Smashing The Stack For Fun And Profit by Aleph One](http://phrack.org/archives/issues/49/14.txt) - classic.
+[Smashing The Stack for Fun and Profit in PDF](https://inst.eecs.berkeley.edu/~cs161/fa08/papers/stack_smashing.pdf)                                                     
 [owasp buffer overflow attack](https://owasp.org/www-community/attacks/Buffer_overflow_attack)           
 [exploit-db tutorial](https://www.exploit-db.com/docs/english/28475-linux-stack-based-buffer-overflows.pdf)                
 [buffer overflow attack, brilliant video](https://www.youtube.com/watch?v=1S0aBV-Waeo)         
