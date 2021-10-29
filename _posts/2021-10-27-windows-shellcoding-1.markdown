@@ -276,7 +276,7 @@ So our shellcode is perfectly worked :)
 
 This is how you create your own shellcode for windows, for example.                         
 
-But, there is one caveat. This shellcode will only work on this machine. In order for it to work on any windows 7 x86 sp1, ASM needs to find the addresses of the functions by itself. I will do this in the next part.               
+But, there is one caveat. This shellcode will only work on this machine. Because, the addresses of all DLLs and their functions change on reboot and are different on each system. In order for it to work on any windows 7 x86 sp1, ASM needs to find the addresses of the functions by itself. I will do this in the next part.               
 
 > This is a practical case for educational purposes only. 
 
