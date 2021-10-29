@@ -1,5 +1,5 @@
 ---
-title:  "Buffer overflow - 1. Linux stack smashing"
+title:  "Buffer overflow - part 1. Linux stack smashing"
 date:   2021-10-19 10:00:00 +0600
 header:
   teaser: "/assets/images/15/2021-10-20_17-24.png"

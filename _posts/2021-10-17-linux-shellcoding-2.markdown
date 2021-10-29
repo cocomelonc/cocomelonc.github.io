@@ -1,5 +1,5 @@
 ---
-title:  "Linux shellcoding - 2. Reverse TCP shellcode"
+title:  "Linux shellcoding - part 2. Reverse TCP shellcode"
 date:   2021-10-17 10:00:00 +0600
 header:
   teaser: "/assets/images/14/2021-10-16_11-42.png"

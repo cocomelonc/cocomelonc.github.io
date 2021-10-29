@@ -1,5 +1,5 @@
 ---
-title:  "Windows shellcoding - 1. Simple example"
+title:  "Windows shellcoding - part 1. Simple example"
 date:   2021-10-27 10:00:00 +0600
 header:
   teaser: "/assets/images/16/2021-10-27_19-24.png"
