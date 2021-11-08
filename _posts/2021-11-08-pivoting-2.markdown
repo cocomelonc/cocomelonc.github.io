@@ -200,6 +200,7 @@ the attacker discovered secret network by following the steps below.
 - successfully exploit `ms08-067` on `machine B`                   
 - final       
 
+[first part](/pentest/2021/11/04/pivoting-1.html)         
 [pivoting via metasploit](https://www.offensive-security.com/metasploit-unleashed/pivoting/)          
 [metasploit](https://www.metasploit.com/)            
 [proxychains](https://github.com/haad/proxychains)       
