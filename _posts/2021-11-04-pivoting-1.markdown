@@ -147,7 +147,7 @@ check our listener:
 
 ![machine B 6](/assets/images/19/2021-05-31_12-02.png){:class="img-responsive"}         
 
-**So, the machine B has been pnwed :)**
+**So, the machine B has been pwned :)**
 
 ### conclusion
 
