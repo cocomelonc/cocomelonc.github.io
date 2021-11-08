@@ -1,5 +1,5 @@
 ---
-title:  "Pivoting - part 2. Proxychains. Practical example."
+title:  "Pivoting - part 2. Proxychains. Metasploit. Practical example."
 date:   2021-11-08 10:00:00 +0600
 header:
   teaser: "/assets/images/20/2021-11-08_13-25.png"
