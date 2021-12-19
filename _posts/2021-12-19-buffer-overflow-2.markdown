@@ -442,6 +442,7 @@ Since 01 december 2021, Buffer Overflow may (or may not) be included as a low-pr
 As you can see, the buffer overflow attack in windows is not very different from the [Linux version](/pwn/2021/10/19/buffer-overflow-1.html)    
 
 [Buffer overflow attack, brilliant video](https://www.youtube.com/watch?v=1S0aBV-Waeo)    
+[Brilliant "classic" tutorial by TCM security](https://tcm-sec.com/buffer-overflows-made-easy/)    
 [The Shellcoder's Handbook](https://www.wiley.com/en-us/The+Shellcoder%27s+Handbook%3A+Discovering+and+Exploiting+Security+Holes%2C+2nd+Edition-p-9780470080238)    
 [TryHackMe BOF room](https://tryhackme.com/room/bufferoverflowprep)    
 [OSCP exam change](https://www.offensive-security.com/offsec/oscp-exam-structure/)    
