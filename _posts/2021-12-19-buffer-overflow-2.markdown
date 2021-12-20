@@ -90,7 +90,7 @@ python2.7 fuzzer.py
 
 ![BOF 4](/assets/images/33/2021-05-26_16-48.png){:class="img-responsive"}    
 
-Running the script if all is set up correctly will crash SLmail somewhere between `2700` and `2900` bytes as shown below. We can tell because Immunity Debugger informs us that an "Access violation" occurred and paused the program:     
+Running the script if all is set up correctly will crash SLmail somewhere between `2600` and `2700` bytes as shown below. We can tell because Immunity Debugger informs us that an "Access violation" occurred and paused the program:     
 
 ![BOF 5](/assets/images/33/2021-05-26_16-55.png){:class="img-responsive"}     
 
