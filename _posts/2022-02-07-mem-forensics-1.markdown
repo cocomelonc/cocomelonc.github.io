@@ -3,7 +3,7 @@ title:  "Basic memory forensics with Volatility. Process injection example."
 date:   2022-02-07 10:00:00 +0600
 header:
   teaser: "/assets/images/39/2022-02-08_19-11.png"
-categories: 
+categories:
   - tutorial
 tags:
   - red team
@@ -21,15 +21,15 @@ Hello, cybersecurity enthusiasts and white hackers!
 
 This is a self-researching of memory forensics via Volatility Framework.    
 
-### Memory forensics
+### memory forensics
 
 Sometimes, after a system has been pwned, it's important to extract forensically-relevant information. RAM is considered volatile - meaning that it doesn't live long. Each time a computer is restarted, it flushes its memory from RAM, which means that, if a computer is hacked and then is restarted, you'll lose a lot of information that tells the story about how the system was compromised by attacker.    
 
-### Volatility Framework
+### volatility Framework
 
 Volatility is a tool that can be used to analyze the volatile memory of a system. Download and install from [here](https://github.com/volatilityfoundation/volatility3)        
 
-### Practice example
+### practice example
 
 First of all, for simulating malware activity, create [classic](/tutorial/2021/09/18/malware-injection-1.html) process injection malware:    
 
@@ -107,7 +107,7 @@ and run:
 
 As you can see, everything is work perfectly.    
 
-### Winpmem
+### winpmem
 
 Secondly, after run our malicious activity, I downloaded `winpmem` into victim's Windows 7 x64 machine. So, run:   
 
@@ -119,9 +119,9 @@ Secondly, after run our malicious activity, I downloaded `winpmem` into victim's
 
 After finished, move `mem.raw` file to my attacker's kali machine.   
 
-### Analyzing Windows Memory
+### analyzing Windows memory
 
-#### Obtaining OS
+#### obtaining OS
 
 Obtaining the operating system of the memory dump is pretty easy. The plugin `windows.info.Info` can be specified to enumerate information about the captured memory dump:   
 
@@ -130,7 +130,7 @@ python3 ./volatility3/vol.py -f ./cybersec_blog/2022-02-07-mem-forensics-1/dump/
 ```
 ![injection 5](/assets/images/39/2022-02-07_22-59.png){:class="img-responsive"}    
 
-#### Analysing processes
+#### analysing processes
 
 Then, I used the `windows.pslist.PsList` plugin to look at the processes that were running on the victim's computer at the time the memory was captured:    
 
@@ -142,12 +142,12 @@ python3 ./volatility3/vol.py -f ./cybersec_blog/2022-02-07-mem-forensics-1/dump/
 
 Looking at the list, PID `2380` is `mspaint.exe`, which is our victim process.    
 
-### Process injected code   
+### process injected code   
 
 Then for finding hidden and injected code, run:   
 
 ```bash
-python3 ./volatility3/vol.py -f ./cybersec_blog/2022-02-07-mem-forensics-1/dump/mem.raw windows.malfind.Malfind 
+python3 ./volatility3/vol.py -f ./cybersec_blog/2022-02-07-mem-forensics-1/dump/mem.raw windows.malfind.Malfind
 ```
 ![injection 8](/assets/images/39/2022-02-09_00-54.png){:class="img-responsive"}    
 
@@ -158,12 +158,12 @@ As you can see, we found memory section which we injected our `meow-meow` payloa
 Then, dump the process memory with `windows.memmap.Memmap` plugin:       
 
 ```bash
-python3 ./volatility3/vol.py -f ./cybersec_blog/2022-02-07-mem-forensics-1/dump/mem.raw --output-dir ./cybersec_blog/2022-02-07-mem-forensics-1/dump/ windows.memmap.Memmap --pid 2380 --dump 
+python3 ./volatility3/vol.py -f ./cybersec_blog/2022-02-07-mem-forensics-1/dump/mem.raw --output-dir ./cybersec_blog/2022-02-07-mem-forensics-1/dump/ windows.memmap.Memmap --pid 2380 --dump
 ```
 
 ![injection 10](/assets/images/39/2022-02-07_23-17.png){:class="img-responsive"}    
 
-### Finding strings
+### finding strings
 
 The `strings` command is a popular static malware analysis tool that can quickly assist in extracting human-readable pertaining to a malicious file:    
 
@@ -175,7 +175,7 @@ strings -e l ./cybersec_blog/2022-02-07-mem-forensics-1/dump/pid.2380.dmp | grep
 
 ![injection 12](/assets/images/39/2022-02-07_23-20.png){:class="img-responsive"}    
 
-### Network connections
+### network connections
 
 Next, I tested a scenario in which a malware or an attacker injects code into an already running process, and only then initiates a connection. Let's go to replace our payload in malware example as `msfvenom` reverse shell for demo:   
 
@@ -196,12 +196,12 @@ For the correctness of the experiment, we will launch our malware and make a mem
 Then run Volatility with `windows.netstat.NetStat` plugin. This plugin allows you to see the network connections on the machine at the time the memory was captured:        
 
 ```bash
-python3 ./volatility3/vol.py -f ./cybersec_blog/2022-02-07-mem-forensics-1/dump/mem.raw windows.netstat.NetStat | grep -ie "mspaint.exe" 
+python3 ./volatility3/vol.py -f ./cybersec_blog/2022-02-07-mem-forensics-1/dump/mem.raw windows.netstat.NetStat | grep -ie "mspaint.exe"
 ```
 
 ![injection 17](/assets/images/39/2022-02-09_02-36.png){:class="img-responsive"}    
 
-### Conclusion
+### conclusion
 
 There are still a ton of other plugins that are currently available that I did not mention in this tutorial and the memory sample I were analyzing was a Windows memory dump, because I did not work with the different plugins that target the Linux and Mac operating systems.   
 
@@ -214,7 +214,3 @@ I hope this post will be very helpful for entry level cybersec specialists from 
 
 Thanks for your time happy hacking and good bye!   
 *PS. All drawings and screenshots are mine*
-
-
-
-

@@ -3,7 +3,7 @@ title:  "Windows API hooking. Simple C++ example."
 date:   2021-11-30 10:00:00 +0600
 header:
   teaser: "/assets/images/27/2021-11-30_17-00.png"
-categories: 
+categories:
   - tutorial
 tags:
   - api hooking
@@ -18,11 +18,11 @@ Hello, cybersecurity enthusiasts and white hackers!
 
 ![api hooking](/assets/images/27/2021-11-30_17-00.png){:class="img-responsive"}    
 
-### What is API hooking?
+### what is API hooking?
 
 API hooking is a technique by which we can instrument and modify the behaviour and flow of API calls. This technique is also used by many AV solutions to detect if code is malicious.   
 
-### Example 1
+### example 1
 
 Before hooking windows API functions I will consider the case of how to do this with an exported function from a DLL.  
 
@@ -278,7 +278,7 @@ And see it in action (on `Windows 7 x64` in this case):
 
 As you can see our hook is worked perfectly!! Cat goes `meow-squeak-tweet!!!` instead `meow-meow`!   
 
-### Example 2
+### example 2
 
 Similarly, you can hook for example, a function `WinExec` from `kernel32.dll` (`hooking2.cpp`):   
 ```cpp

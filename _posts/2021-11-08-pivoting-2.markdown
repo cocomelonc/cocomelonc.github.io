@@ -3,7 +3,7 @@ title:  "Pivoting - part 2. Proxychains. Metasploit. Practical example."
 date:   2021-11-08 10:00:00 +0600
 header:
   teaser: "/assets/images/20/2021-11-08_13-25.png"
-categories: 
+categories:
   - pentest
 tags:
   - pivoting
@@ -20,7 +20,7 @@ Hello, cybersecurity enthusiasts and white hackers!
 
 This article I will consider scenarios for attacking protected segments of the corporate network using pivoting techniques via `metasploit` framework and `proxychains`.      
 
-### Scenario
+### scenario
 
 Let's consider at this network topology:       
 

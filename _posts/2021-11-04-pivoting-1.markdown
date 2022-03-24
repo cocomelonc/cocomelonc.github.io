@@ -3,7 +3,7 @@ title:  "Pivoting - part 1. Practical example"
 date:   2021-11-04 10:00:00 +0600
 header:
   teaser: "/assets/images/19/2021-11-05_02-02.png"
-categories: 
+categories:
   - pentest
 tags:
   - pivoting
@@ -20,13 +20,13 @@ Hello, cybersecurity enthusiasts and white hackers!
 
 This article will consider scenarios for attacking protected segments of a corporate network using pivoting techniques. I will focus on a practical example.        
 
-### Pivoting
+### pivoting
 
 Pivoting is a technique by which access is organized to those networks to which we do not have access under normal circumstances and obtained using compromised computers. Network isolation will be useless if we compromise a host that has access to all isolated subnets. Thus, an attacker can use the routing capabilities of a compromised machine to access internal corporate resources.            
 
 I will show with an example how an attacker can gain access to a "hidden" network without having direct access to it in the early stages of penetration testing using pivot techniques.       
 
-### Scenario
+### scenario
 
 Let's consider at this network topology:       
 
