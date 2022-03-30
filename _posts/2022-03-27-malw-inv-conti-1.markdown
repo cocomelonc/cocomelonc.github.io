@@ -147,6 +147,8 @@ On `February 25th, 2022`, Conti released a statement of full support for the Rus
 
 ![conti](/assets/images/46/conti-1.jpg){:class="img-responsive"}    
 
+ContiLeaks is a turning point in the cybercrime ecosystem, and in this case, we can expect a lot of changes in how cybercriminal organizations operate. From the one side less mature cybercriminal orgs might be very powerful and instead more sophischated gangs will learn from Conti's mistakes.    
+
 I hope this post spreads awareness to the blue teamers of this interesting malware techniques, and adds a weapon to the red teamers arsenal.      
 
 [Carbanak](https://en.wikipedia.org/wiki/Carbanak)    
