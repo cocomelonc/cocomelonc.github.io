@@ -3,7 +3,7 @@ title:  "Windows shellcoding - part 2. Find kernel32 address"
 date:   2021-10-30 10:00:00 +0600
 header:
   teaser: "/assets/images/17/2021-10-30_16-30.png"
-categories: 
+categories:
   - tutorial
 tags:
   - asm
@@ -106,9 +106,9 @@ typedef struct _TEB {
 } TEB, *PTEB;
 ```
 
-PEB - process structure in windows, filled in by the loader at the stage of process creation, which contains the information necessary for the functioning of the process.     
+`PEB` - process structure in windows, filled in by the loader at the stage of process creation, which contains the information necessary for the functioning of the process.     
 
-TEB is a structure that is used to store information about threads in the current process, each thread has its own TEB.        
+`TEB` is a structure that is used to store information about threads in the current process, each thread has its own TEB.        
 
 Let's open some program in the windbg debugger and run command:
 ```cmd
@@ -199,7 +199,7 @@ Thus, the following is obtained:
 2. offset to `LDR` within `PEB` is `0x00c`
 3. offset to `InMemoryOrderModuleList` is `0x014`
 4. 1st loaded module is our `.exe`
-5. 2nd loaded module is `ntdll.dll` 
+5. 2nd loaded module is `ntdll.dll`
 6. 3rd loaded module is `kernel32.dll`
 7. 4th loaded module is `kernelbase.dll`
 
@@ -247,7 +247,7 @@ As you can see everything is worked perfectly!
 
 The next step is to find the address of function (for example `ExitProcess`) using `LoadLibraryA` and call the function. This will be in the next part.           
 
-> This is a practical case for educational purposes only. 
+> This is a practical case for educational purposes only.
 
 [History and Advances in Windows Shellcode](http://www.phrack.org/archives/issues/62/7.txt)       
 [PEB structure](https://docs.microsoft.com/en-us/windows/win32/api/winternl/ns-winternl-peb)        
