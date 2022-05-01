@@ -24,7 +24,7 @@ Reverse shell or often called connect-back shell is remote shell introduced from
 
 ![rev shells](/assets/images/4/shells.png){:class="img-responsive"}
 
-The reverse shell can take the advantage of common outbound ports such as port 80, 443, 8080 and etc.
+The reverse shell can take the advantage of common outbound ports such as port `80, 443, 8080` and etc.
 
 The reverse shell usually used when the target victim machine is blocking incoming connection from certain port by firewall. To bypass this firewall restriction, red teamers and pentesters use reverse shells.
 
@@ -41,7 +41,7 @@ There is one more caveat. In real cyber attacks, the reverse shell can also be o
 
 The purpose of this post is not to exploit a vulnerability in the target host or network, but the idea is to find a vulnerability that can be leverage to perform a code execution.
 
-Depending on which system is installed on the victim and what services are running there, the reverse shell will be different, it may be php, python, jsp etc.
+Depending on which system is installed on the victim and what services are running there, the reverse shell will be different, it may be `php, python, jsp` etc.
 
 ***
 
@@ -53,7 +53,7 @@ For simplicity, in this example, the victim allow outgoing connection on any por
 nc -lvp 4444
 ```
 
-In this case `-l` listen, '-v' verbose and `-p` port 4444 on every interface. You can also add `-n` for numeric only IP addresses, not DNS.
+In this case `-l` listen, `-v` verbose and `-p` port 4444 on every interface. You can also add `-n` for numeric only IP addresses, not DNS.
 
 ![listener](/assets/images/4/2021-09-11_17-59.png){:class="img-responsive"}
 
