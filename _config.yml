@@ -102,6 +102,9 @@ author:
     - label: "Email"
       icon: "fas fa-fw fa-envelope-square"
       url: "mailto:cocomelonkz@gmail.com"
+    - label: "Twitter"
+      icon: "fab fa-twitter"
+      url: "https://twitter.com/cocomelonckz"
     - label: "HackTheBox"
       icon: "far fa-flag"
       url: "https://www.hackthebox.eu/profile/293150"
@@ -118,6 +121,9 @@ author:
 # Site Footer
 footer:
   links:
+    - label: "Twitter"
+      icon: "fab fa-twitter"
+      url: "https://twitter.com/cocomelonckz"
     - label: "HackTheBox"
       icon: "far fa-flag"
       url: "https://www.hackthebox.eu/profile/293150"
@@ -271,4 +277,3 @@ defaults:
       comments: # true
       share: true
       related: true
-
