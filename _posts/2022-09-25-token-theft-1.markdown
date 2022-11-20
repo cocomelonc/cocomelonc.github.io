@@ -19,7 +19,7 @@ Hello, cybersecurity enthusiasts and white hackers!
 
 ![token](/assets/images/71/2022-09-28_01-04.png){:class="img-responsive"}    
 
-This post is the result of self-researching one of the interesting classic APT techniques: Token theft.    
+This post is the result of my own research into one of the interesting classic APT techniques: Token theft.    
 
 ### windows tokens and privilege constants
 

@@ -19,7 +19,7 @@ Hello, cybersecurity enthusiasts and white hackers!
 
 ![av](/assets/images/45/2022-03-25_10-50.png){:class="img-responsive"}    
 
-This post is a result of self-researching another AV evasion trick. An example how to bypass AV engines in simple C++ malware.   
+This post is a result of my own research into another AV evasion trick. An example how to bypass AV engines in simple C++ malware.   
 
 ### hashing function names
 

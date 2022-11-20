@@ -20,7 +20,7 @@ Hello, cybersecurity enthusiasts and white hackers!
 
 ![conti](/assets/images/49/2022-04-11_12-39.png){:class="img-responsive"}    
 
-This post is the second part of Conti ransomware source code self-investigation.    
+This post is the second part of my own Conti ransomware source code investigation.    
 
 [first part](/investigation/2022/03/27/malw-inv-conti-1.html)    
 

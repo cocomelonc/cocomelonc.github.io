@@ -19,7 +19,7 @@ Hello, cybersecurity enthusiasts and white hackers!
 
 ![token](/assets/images/77/2022-10-29_03-59.png){:class="img-responsive"}    
 
-This post is the result of self-researching one of the interesting APT techniques: Token theft via UpdateProcThreadAttribute.    
+This post is the result of my own research into one of the more interesting APT techniques: token theft via UpdateProcThreadAttribute.     
 
 In the previous [post](/tutorial/2022/09/25/token-theft-1.html) I wrote about classic token theft via `DuplicateTokenEx` and `CreateProcessWithTokenW`. Today I will describe an alternative method that works starting from Windows Vista.     
 

@@ -19,7 +19,7 @@ Hello, cybersecurity enthusiasts and white hackers!
 
 ![injection](/assets/images/39/2022-02-08_19-11.png){:class="img-responsive"}    
 
-This is a self-researching of memory forensics via Volatility Framework.    
+This is a result of my own research on memory forensics via the Volatility Framework.      
 
 ### memory forensics
 
