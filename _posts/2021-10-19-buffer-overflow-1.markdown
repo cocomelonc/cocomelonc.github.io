@@ -3,7 +3,7 @@ title:  "Buffer overflow - part 1. Linux stack smashing"
 date:   2021-10-19 10:00:00 +0600
 header:
   teaser: "/assets/images/15/2021-10-20_17-24.png"
-categories: 
+categories:
   - pwn
 tags:
   - asm
@@ -27,7 +27,7 @@ A stack buffer overflow occurs when a program writes more data to the stack than
 
 Before compile any vulnerable code, let's see what needs for successfully exploitation. If you reboot your machine during the exploitation, you will have to disable ASLR:
 ```bash
-echo 0 | sudo tee /proc/sys/kernel/randomize_va_space 
+echo 0 | sudo tee /proc/sys/kernel/randomize_va_space
 ```
 after every reboot.          
 
@@ -38,15 +38,15 @@ Let's go to consider vulnerable program (`vuln.c`):
 #include <string.h>
 
 int overflow(char *input) {
-	char buf[256];
-	strcpy(buf, input);
-	return 1;
+  char buf[256];
+  strcpy(buf, input);
+  return 1;
 }
 
 int main(int argc, char *argv[]) {
-	overflow(argv[1]);
-	printf("meow =^..^=\n");
-	return 1;
+  overflow(argv[1]);
+  printf("meow =^..^=\n");
+  return 1;
 }
 
 ```
@@ -166,13 +166,12 @@ print padding + nop + shellcode + eip
 
 In this case, my shellcode length is `25` bytes.
 
-Often it can be useful to insert some no operation instruction (NOPS) before our shellcode begins so that it can be executed cleanly. NOPs are instructions in memory that just says look for the instructions next to me on the stack. Let us briefly summarize what we need for this:      
+Often it can be useful to insert some no operation instruction (NOPs) before our shellcode begins so that it can be executed cleanly. NOPs are instructions in memory that just says look for the instructions next to me on the stack. Let us briefly summarize what we need for this:      
 1. we need total `268 + 4 = 272` bytes to get `eip`.                
 2. we can use additional `64` bytes of NOPs.          
 3. minimum `25` bytes for our shellcode.       
 
 ![buffer overflow schema](/assets/images/15/bo-1.png){:class="img-responsive"}          
-
 
 Now we can try to find out how much space we have available to insert our shellcode. For that we are going to head back into GDB and run the following command:        
 
@@ -277,18 +276,3 @@ So, everything is worked perfectly :)
 
 Thanks for your time, happy hacking and good bye!    
 *PS. All drawings and screenshots are mine*
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
