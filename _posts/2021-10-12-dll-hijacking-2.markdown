@@ -427,7 +427,7 @@ First of all, as a Windows bug hunter, if you want to find privilege escalation 
 
 A simple way to prevent DLL hijacking from happening would be for applications to always use absolute paths instead of relative ones. Although some applications (notably portable ones) will not always be able to do so, applications located in `\system32\` and relying on DLLs in the same folder have no excuse for doing otherwise. The better option, which only very few Windows executables seem to do, is to verify all DLLs before loading them (e.g. by checking their signatures) - this would largely eliminate the problem.
 
-- [Source Code in Github](https://github.com/cocomelonc/2021-10-12-dll-hijacking-2)        
+- [Source Code in Github](https://github.com/cocomelonc/meow/tree/master/2021-10-12-dll-hijacking-2)        
 - [pefile](https://github.com/erocarrera/pefile)                    
 - [DLL Export Viewer](https://www.nirsoft.net/utils/dll_export_viewer.html)          
 - [Microsoft DLL search order](https://docs.microsoft.com/en-us/windows/desktop/dlls/dynamic-link-library-search-order)                

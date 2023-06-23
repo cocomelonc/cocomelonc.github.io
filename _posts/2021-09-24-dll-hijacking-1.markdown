@@ -166,7 +166,7 @@ In the future I will try to figure out this, and I will try create python script
 [DLL Export Viewer](https://www.nirsoft.net/utils/dll_export_viewer.html)      
 [Module-Definition (def) files](https://docs.microsoft.com/en-us/cpp/build/reference/module-definition-dot-def-files?view=msvc-160&viewFallbackFrom=vs-2019)
 
-[Source code in Github](https://github.com/cocomelonc/2021-09-24-dllhijack)     
+[Source code in Github](https://github.com/cocomelonc/meow/tree/master/2021-09-24-dllhijack)     
 
 I've added the vulnerable bginfo (version 4.16) to github if you'd like to experiment.
 

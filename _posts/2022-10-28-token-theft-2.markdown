@@ -201,7 +201,7 @@ I hope this post least a little useful for entry level cyber security specialist
 [UpdateProcThreadAttribute](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-updateprocthreadattribute)    
 [CreateProcessW](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw)       
 [APT techniques: Token theft. Part 1](/tutorial/2022/09/25/token-theft-1.html)     
-[source code in github](https://github.com/cocomelonc/2022-10-28-token-theft-2)        
+[source code in github](https://github.com/cocomelonc/meow/tree/master/2022-10-28-token-theft-2)        
 
 > This is a practical case for educational purposes only.      
 

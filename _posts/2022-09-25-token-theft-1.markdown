@@ -314,7 +314,7 @@ I hope this post least a little useful for entry level cyber security specialist
 [ATT&CK MITRE: Token Impersonation/Theft](https://attack.mitre.org/techniques/T1134/001/)       
 [APT28](https://attack.mitre.org/groups/G0007/)      
 [FIN8](https://attack.mitre.org/groups/G0061/)        
-[source code on github](https://github.com/cocomelonc/2022-09-25-token-theft-1)    
+[source code on github](https://github.com/cocomelonc/meow/tree/master/2022-09-25-token-theft-1)    
 
 > This is a practical case for educational purposes only.      
 

@@ -350,7 +350,7 @@ I think I will write in another post more about APT attacks and ransomware.
 
 I think this post will be useful both for red teamers to bypass anti-virus protection and for the blue teams to analyze malware.
 
-[Source code on Github](https://github.com/cocomelonc/2021-09-15-rev-c-1)
+[Source code on Github](https://github.com/cocomelonc/meow/tree/master/2021-09-15-rev-c-1)
 
 - [AES](https://en.wikipedia.org/wiki/Advanced_Encryption_Standard)
 - [Cryptography by Dan Boneh and Victor Shoup - free book](https://toc.cryptobook.us/)

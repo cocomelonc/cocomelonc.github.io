@@ -224,7 +224,7 @@ As a proof of concept, we created a real-life example, but what about `AV/EDR` e
 [SysWhispers3](https://github.com/klezVirus/SysWhispers3)      
 [Code injection via NtAllocateVirtualMemory](/tutorial/2021/12/07/malware-injection-10.html)       
 [Classic DLL injection into the process. Simple C++ malware](/tutorial/2021/09/20/malware-injection-2.html)        
-[source code in github](https://github.com/cocomelonc/2023-06-09-syscalls-2)           
+[source code in github](https://github.com/cocomelonc/meow/tree/master/2023-06-09-syscalls-2)           
 
 > This is a practical case for educational purposes only.
 

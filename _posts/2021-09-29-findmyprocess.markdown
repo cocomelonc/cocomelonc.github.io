@@ -285,7 +285,7 @@ In this case, I didn't check if `SeDebugPrivilege` is "enabled" in my own proces
 [GetProcAddress](https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getprocaddress)     
 [LoadLibraryA](https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-loadlibrarya)
 
-[Source code on Github](https://github.com/cocomelonc/2021-09-29-processfind-1)
+[Source code on Github](https://github.com/cocomelonc/meow/tree/master/2021-09-29-processfind-1)
 
 Thanks for your time and good bye!   
 *PS. All drawings and screenshots are mine*

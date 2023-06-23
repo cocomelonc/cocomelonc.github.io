@@ -255,7 +255,7 @@ The next step is to find the address of function (for example `ExitProcess`) usi
 [PEB_LDR_DATA structure](https://docs.microsoft.com/en-us/windows/win32/api/winternl/ns-winternl-peb_ldr_data)            
 [The Shellcoder's Handbook](https://www.wiley.com/en-us/The+Shellcoder%27s+Handbook%3A+Discovering+and+Exploiting+Security+Holes%2C+2nd+Edition-p-9780470080238)              
 [windows shellcoding part 1](/tutorial/2021/10/27/windows-shellcoding-1.html)             
-[Source code in Github](https://github.com/cocomelonc/2021-10-30-windows-shellcoding-2)         
+[Source code in Github](https://github.com/cocomelonc/meow/tree/master/2021-10-30-windows-shellcoding-2)         
 
 Thanks for your time, happy hacking and good bye!    
 *PS. All drawings and screenshots are mine*             
