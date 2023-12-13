@@ -70,6 +70,11 @@ XMR address:
 
 Binance email: [zhzhussupovkz@gmail.com](mailto:zhzhussupovkz@gmail.com)    
 
+VISA/Mastercard:     
+
+4400 4301 3484 3363 AIMAN ANTIPINA (cardholder)    
+4400 4302 1897 8630 ZHANAR KHASSENOVA (cardholder)    
+
 For Kaspi:    
 
 +7 700 270 7807 (Айман А.)    
