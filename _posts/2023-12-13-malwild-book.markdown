@@ -80,6 +80,9 @@ For Kaspi:
 +7 700 270 7807 (Айман А.)    
 +7 701 242 6662 (Алия Ш.)    
 
+Charity fund +1 from Kazakhstan (Kaspi QR):    
+
+![plus1](/assets/images/113/plus1.png){:class="img-responsive"}
 
 If you are unable to pay for it, I will send it to you for free.    
 
