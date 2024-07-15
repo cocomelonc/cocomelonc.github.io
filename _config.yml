@@ -96,7 +96,8 @@ analytics:
 author:
   name             : "cocomelonc"
   avatar           : "/assets/images/cat.png"
-  bio              : "cybersec enthusiast. CTF player"
+  bio              : "cybersec enthusiast. author. speaker. hacker"
+  location         : "Istanbul"
   email            :
   links:
     - label: "Email"
