@@ -2,7 +2,7 @@
 title:  "Linux malware development 2: find process ID by name. Simple C example."
 date:   2024-09-16 02:00:00 +0200
 header:
-  teaser: "/assets/images/134/2024-09-16_17-36.png"
+  teaser: "/assets/images/134/2024-09-17_12-29.png"
 categories:
   - linux
 tags:
@@ -16,7 +16,7 @@ tags:
 
 Hello, cybersecurity enthusiasts and white hackers!        
 
-![linux](/assets/images/134/2024-09-16_17-36.png){:class="img-responsive"}     
+![linux](/assets/images/134/2024-09-17_12-29.png){:class="img-responsive"}     
 
 I promised to shed light on programming rootkits and other interesting and evil things when programming malware for Linux, but before we start, let's try to do simple things. Some of my readers have no idea how to do, for example, code injections into Linux processes.    
 
@@ -183,6 +183,8 @@ Then run it in linux machine:
 ```
 
 ![linux](/assets/images/134/2024-09-16_17-35.png){:class="img-responsive"}     
+
+![linux](/assets/images/134/2024-09-16_17-36.png){:class="img-responsive"}     
 
 As you can see, everything is wokred perfectly. We found Telegram ID (`75678`) in my case! =^..^=    
 
