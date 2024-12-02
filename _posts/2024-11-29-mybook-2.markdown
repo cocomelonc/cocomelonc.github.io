@@ -1,0 +1,89 @@
+---
+title:  "Malware development book. Second edition"
+date:   2024-11-29 04:00:00 +0300
+header:
+  teaser: "/assets/images/139/2024-11-29_20-22.png"
+categories:
+  - book
+tags:
+  - malware
+  - windows
+  - persistence
+  - red team
+  - win32api
+---
+
+﷽
+
+Hello, cybersecurity enthusiasts and white hackers!
+
+![book](/assets/images/139/2024-11-29_20-22.png){:class="img-responsive"}    
+
+Alhamdulillah, I finished writing this book and we still going treatment with my daughter Munira. It was quite difficult since writing books are always difficult even for me with my experience. In sha Allah everything will be fine. O Allah, Lord of the Worlds, give strength to my daughter.        
+
+Why is the book called that? **MD** - means **M**alware **D**evelopment, The **MZ** signature is a signature used by the MS-DOS relocatable 16-bit EXE format and its still present in today's PE files for backwards compatibility., also **MD MZ** means **M**y **D**aughter **M**unira **Z**hassulankyzy.    
+
+I will be very happy if this book helps at least one person to gain knowledge and learn the science of cybersecurity. The book is mostly practice oriented.     
+
+![book](/assets/images/139/MD_MZ-2nd-edition.png){:class="img-responsive"}    
+
+![book](/assets/images/139/MD_MZ-2nd-edition-2.png){:class="img-responsive"}    
+
+This book is dedicated to my wife, Laura, and my children, Yerzhan and Munira. I would like to express my deep gratitude to my friends and colleagues.     
+
+Special thanks to Anna Tsyganova and Duman Sembayev.
+
+The proceeds from the sale of this book will be used to treat Munira and charity funds from Kazakhstan:    
+
+![Munira](/assets/images/139/photo_2024-06-26_18-48-13.jpg){:class="img-responsive"}    
+
+Now we are better, but we are still continuing treatment.    
+
+This book is a new version of **MD MZ - Malware Development Book** - 2024 edition.     
+
+[First](/book/2022/07/16/mybook.html) version of this book is released in `17.07.2022`:    
+
+![MD](/assets/images/139/MDMZ1_1.png){height="55%"}    
+
+More than two years have passed since then, and I wanted to supplement the book with new articles from my blog. As a result, this new edition of this book now contains almost 1000 pages.      
+
+The new version of this book is divided into five (4 + 1 bonus) chapters:     
+- Malware development tricks and techniques     
+- AV evasion tricks     
+- Persistence techniques     
+- Malware, Cryptography, Research     
+- Intro to linux malware development     
+
+All material in the book is based on posts from my [blog](https://cocomelonc.github.io/)    
+
+If you have questions, you can ask them on my [email](mailto:cocomelonkz@gmail.com).    
+
+My Github repo: [https://github.com/cocomelonc](https://github.com/cocomelonc)    
+
+[This book costs $16](https://paypal.me/cocomelonc/16) but you can pay as much as you want.    
+
+If you cannot pay via Paypal:     
+
+![btc](/assets/images/62/photo_2022-07-17_17-37-46.jpg){:class="img-responsive"}    
+
+BTC address: **1MMDN38mheQn9h2Xa2H6hqMSfFYKW4nQUE**    
+
+![eth](/assets/images/62/photo_2022-07-17_19-26-13.jpg){:class="img-responsive"}
+
+ETH address: **0xf6ed40f61b603a4b2ac7c077034053df4f718f37**    
+
+![xmr](/assets/images/62/photo_2022-07-17_20-28-09.jpg){:class="img-responsive"}
+
+XMR address:    
+**87E2aD7P7FGiQrUdznXPqtH7enHywV8qm5kMqKziKLz8ECWZENE8ZV5JWRTJhA3RVS5rxSogRsd7z7yX2DMn29dR3Vfnjbj**    
+
+Binance email: [zhzhussupovkz@gmail.com](mailto:zhzhussupovkz@gmail.com)    
+
+If you are unable to pay for it, I will send it to you for free.    
+
+[MD MZ book 2nd edition](https://drive.google.com/file/d/1-6OQWWGNogTeiWj1AK6i-3bxrf4Bz1Ez/view?usp=sharing)    
+
+> All examples are practical cases for educational purposes only.         
+
+Thanks for your time happy hacking and good bye!   
+*PS. All drawings and screenshots are mine*
