@@ -1,8 +1,8 @@
 ---
-title:  "Linux malware development 3: linux process injection with ptrace. Simple C example."
-date:   2024-11-22 02:00:00 +0200
+title:  "Linux hacking part 4: Measuring cache hit and cache miss times in linux."
+date:   2025-02-01 02:00:00 +0200
 header:
-  teaser: "/assets/images/138/2024-11-22_19-12.png"
+  teaser: "/assets/images/146/2025-02-02_18-45.png"
 categories:
   - linux
 tags:
