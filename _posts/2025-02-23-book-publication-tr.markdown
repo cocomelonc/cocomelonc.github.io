@@ -54,7 +54,7 @@ The translation of this book into Turkish is currently underway. Thanks to my fr
 
 You can send donations via [paypal](https://paypal.me/cocomelonc/)    
 
-**All funds raised go towards publishing the hard copy (paper version) of this book (Turkish language). According to my calculations, the first 100 copies will cost almost $5,000.**
+**All funds raised go towards publishing the hard copy (paper version) of this book (Turkish language). According to my calculations, the first 100 copies will cost almost $5,000. I'm starting a fundraising campaign**
 
 Other books:     
 
