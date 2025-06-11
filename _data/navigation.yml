@@ -1,4 +1,6 @@
 main:
+  - title: "conferences"
+    url: /conferences/
   - title: "trainings"
     url: /trainings/
   - title: "about"
