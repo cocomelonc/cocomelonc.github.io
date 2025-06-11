@@ -1,3 +1,5 @@
 main:
+  - title: "trainings"
+    url: /trainings/
   - title: "about"
     url: /about/
