@@ -13,8 +13,9 @@ Malware Development and APT simulation trainings (for organizations):
 **Modality** - Offline    
 **Dates** - Flexible    
 **Duration** - 12 days     
+**Language** - English     
 
-**Registration deadline:** - There are no deadlines for course registration. The course could be taken any time within the
+**Registration deadline** - There are no deadlines for course registration. The course could be taken any time within the
 indicated timeframe. An enrollment is happening
 continuously      
 
