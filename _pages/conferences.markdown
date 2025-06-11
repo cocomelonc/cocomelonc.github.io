@@ -1,6 +1,6 @@
 ---
 title:  "conferences"
-layout: conferences
+layout: about
 permalink: /conferences/
 author_profile: true
 ---
