@@ -12,7 +12,7 @@ Malware Development and APT simulation trainings (for organizations):
 **Title** - Malware Development for Ethical Hackers      
 **Modality** - Offline    
 **Dates** - Flexible    
-**Duration** - 12 days     
+**Duration** - 10 days     
 **Language** - English     
 
 **Registration deadline** - There are no deadlines for course registration. The course could be taken any time within the
@@ -27,8 +27,8 @@ The training is intended for Red Team specialists to learn in more detail the tr
 
 The training is divided into 3 logical modules:     
 - Windows/Linux malware development (4-days)      
-- MacOS/iOS malware development (4-days)       
-- Android malware development (4-days)     
+- MacOS/iOS malware development (3-days)       
+- Android malware development (3-days)     
 
 Most of the example in this training require an understanding of the C/C++ and Kotlin/Java/Swift programming languages.     
 
