@@ -27,7 +27,7 @@ ransomware simulation
 Confidence 2024 Krakow 2024 - Malware, Persistence and Cryptography workshop     
 Security BSides Sofia 2024 - Malware, Cats and Cryptography     
 Security BSides Sofia 2024 - Malware Development 101: From Zero to Non-Hero. Technical Workshop with Lachezar Uzunov      
-Security BSides Zagreb 2024 - Malware and Cryptography      
+[Security BSides Zagreb 2024 - Malware and Cryptography](https://youtu.be/iW6nuz1sztA?si=pCDXrFJ3O2kfgEkV)      
 
 ### 2023
 
