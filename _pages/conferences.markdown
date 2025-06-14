@@ -18,7 +18,7 @@ BlackHat MEA 2024 - Malware and Hunting for Persistence: how adversaries hacking
 [Hack.lu 2024 - Malware and Hunting for Persistence: how adversaries hacking your Windows?](https://youtu.be/gW8v270HjxI?si=Kp8kMuhOmTiFAJYC)      
 Arab Security Conference 2024 - Database Leaks: findings. Practical cases, examples and PoC     
 BSides Krakow 2024 - Malware Development for Ethical Hackers     
-Kazhackstan 2024 - Hacking Process Hacker 2. Track: Reverse/Malware     
+[Kazhackstan 2024 - Hacking Process Hacker 2. Track: Reverse/Malware (rus)](https://www.youtube.com/watch?v=eN7qulPzA-I&list=PL6yKM2nb4YL2v-0P7GHXyfps46g1OQoTu&index=25)     
 OFFZONE 2024 - Technical Workshop: Malware Persistence    
 BSides Prishtina 2024 - Malware, Cats and Cryptography      
 BSides Prishtina 2024 - Malware, Persistence and Cryptography workshop     
