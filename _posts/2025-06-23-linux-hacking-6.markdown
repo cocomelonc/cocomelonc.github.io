@@ -370,6 +370,11 @@ In the future posts of this series I will show more complex, more malicious beha
 
 I hope this post with practical example is useful for malware researchers, linux programmers and everyone who interested on linux kernel programming techniques.    
 
+[Linux malware development 1: intro to kernel hacking. Simple C example](/linux/2024/06/20/linux-kernel-hacking-1.html)      
+[Linux malware development 2: find process ID by name. Simple C example](/linux/2024/09/16/linux-hacking-2.html)      
+[Linux hacking part 5: building a Linux keylogger. Simple C example](/linux/2025/06/03/linux-hacking-5.html)      
+[source code in github](https://github.com/cocomelonc/meow/tree/master/2025-06-23-linux-hacking-6)    
+
 > This is a practical case for educational purposes only.
 
 Thanks for your time happy hacking and good bye!         
