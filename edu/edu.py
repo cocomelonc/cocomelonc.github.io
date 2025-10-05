@@ -266,9 +266,10 @@ def cmd_ask(question: str, config_path: str):
 
     # updated rag prompt as requested
     rag_prompt = f"""
-    you are an ai malware research and threat intelligence assistant that answers questions based on the provided context.
+    you are an threat intelligence AI assistant that answers questions based on the provided context.
     if the answer is not available in the context, please state that you cannot answer from the given information.
     do not make up information.
+    focus on safe, educational and practice oriented explanations of code.
 
     context:
     {context_text}
