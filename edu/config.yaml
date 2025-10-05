@@ -1,0 +1,25 @@
+repo: "https://github.com/cocomelonc/cocomelonc.github.io"
+branch: "main"
+
+include_globs:
+  - "_posts/**/*.md"
+  - "**/*.md"
+exclude_globs:
+  - ".git/**"
+  - "_site/**"
+  - "vendor/**"
+
+collection: "cocomelonc_blog"
+embed_model: "text-embedding-004"     # gemini embeddings
+gen_model: "gemini-2.5-flash"         # fast, low-latency generation
+
+chunk_chars: 1200
+chunk_overlap: 180
+
+md:
+  split_by_headings: true
+  code_as_separate_chunks: true
+  include_front_matter: true
+
+# used to build human-friendly links back to gitHub sources
+base_url: "https://github.com/cocomelonc/cocomelonc.github.io/blob/main/"

@@ -1,0 +1,255 @@
+from __future__ import annotations
+import fnmatch
+import shutil
+import subprocess
+import tempfile
+import textwrap
+import uuid
+from pathlib import Path
+from typing import List, Tuple
+
+import yaml
+import frontmatter
+import chromadb
+from chromadb.config import Settings
+from markdown_it import MarkdownIt
+
+# === gemini API key (educational placeholder) ===
+# replace with your real key before use.
+GEMINI_API_KEY = "YOUR_KEY_HERE"
+
+from google import genai
+from google.genai import types
+
+# single global gemini client.
+_gem_client = genai.Client(api_key=GEMINI_API_KEY)
+
+MD = MarkdownIt()
+
+# -----------------------
+# config & utils
+# -----------------------
+def load_cfg(path: str = "config.yaml") -> dict:
+    return yaml.safe_load(Path(path).read_text(encoding="utf-8"))
+
+def clone_or_checkout(repo: str, branch: str) -> Path:
+    tmp = Path(tempfile.mkdtemp(prefix="blog_repo_"))
+    subprocess.run(
+        ["git", "clone", "--depth", "1", "-b", branch, repo, str(tmp)],
+        check=True,
+    )
+    return tmp
+
+def match_any(p: Path, patterns: List[str]) -> bool:
+    s = p.as_posix()
+    return any(fnmatch.fnmatch(s, pat) for pat in patterns)
+
+def iter_files(root: Path, inc: List[str], exc: List[str]):
+    for p in root.rglob("*"):
+        if p.is_file() and match_any(p, inc) and not match_any(p, exc):
+            yield p
+
+def split_markdown_sections(md_text: str):
+    """
+    split by headings and extract fenced code blocks as standalone chunks.
+    returns list of tuples: (type, text, meta_dict)
+    """
+    tokens = MD.parse(md_text)
+    chunks, cur_heading, buf = [], None, []
+
+    def flush():
+        nonlocal buf
+        if buf and any(t.strip() for t in buf):
+            chunks.append(("section", "\n".join(buf).strip(), {"heading": cur_heading}))
+        buf = []
+
+    i = 0
+    while i < len(tokens):
+        t = tokens[i]
+        if t.type == "heading_open":
+            flush()
+            if i + 1 < len(tokens) and tokens[i + 1].type == "inline":
+                cur_heading = tokens[i + 1].content.strip()
+            while i < len(tokens) and tokens[i].type != "heading_close":
+                i += 1
+        elif t.type in ("fence", "code_block"):
+            flush()
+            lang = getattr(t, "info", "") or ""
+            code = t.content
+            chunks.append(("code", code, {"heading": cur_heading, "lang": lang.strip()}))
+        elif t.type == "inline":
+            if t.content:
+                buf.append(t.content)
+        i += 1
+    flush()
+    return chunks
+
+def chunk_text(text: str, size: int, overlap: int):
+    if len(text) <= size:
+        yield text, 0, len(text)
+        return
+    start = 0
+    while start < len(text):
+        end = min(len(text), start + size)
+        yield text[start:end], start, end
+        if end == len(text):
+            break
+        start = max(0, end - overlap)
+
+def embed_batch_gemini(model: str, texts: List[str]) -> List[List[float]]:
+    """
+    gemini embeddings (text-embedding-004). simple per-text loop.
+    """
+    out: List[List[float]] = []
+    for t in texts:
+        r = _gem_client.models.embed_content(model=model, content=t)
+        out.append(r.embedding.values)
+    return out
+
+# -----------------------
+# index command
+# -----------------------
+def cmd_index():
+    cfg = load_cfg()
+    repo = cfg["repo"]
+    branch = cfg.get("branch", "main")
+    inc = cfg.get("include_globs", ["_posts/**/*.md"])
+    exc = cfg.get("exclude_globs", [])
+    collection = cfg.get("collection", "cocomelonc_blog")
+    embed_model = cfg.get("embed_model", "text-embedding-004")
+    size = int(cfg.get("chunk_chars", 1200))
+    ovlp = int(cfg.get("chunk_overlap", 180))
+    base_url = cfg.get("base_url", "")
+    md_cfg = cfg.get(
+        "md",
+        {"split_by_headings": True, "code_as_separate_chunks": True, "include_front_matter": True},
+    )
+
+    tmp = clone_or_checkout(repo, branch)
+    try:
+        chroma = chromadb.Client(Settings(is_persistent=True, persist_directory=".chroma"))
+
+        # Recreate collection for a clean index
+        if collection in [c.name for c in chroma.list_collections()]:
+            chroma.delete_collection(collection)
+        col = chroma.create_collection(collection)
+
+        docs, ids, metas = [], [], []
+        batch_size = 64
+
+        for f in iter_files(tmp, inc, exc):
+            raw = f.read_text(encoding="utf-8", errors="ignore")
+            post = frontmatter.loads(raw)
+            fm = post.metadata or {}
+            body = str(post.content)
+
+            parts = split_markdown_sections(body) if md_cfg.get("split_by_headings", True) else [
+                ("section", body, {})
+            ]
+
+            rel = f.relative_to(tmp).as_posix()
+            url = base_url + rel if base_url else rel
+
+            for typ, content, meta in parts:
+                if not content.strip():
+                    continue
+                for chunk, s, e in chunk_text(content, size, ovlp):
+                    ids.append(str(uuid.uuid4()))
+                    docs.append(chunk)
+                    metas.append({
+                        "path": rel,
+                        "url": url,
+                        "type": typ,
+                        "heading": meta.get("heading"),
+                        "lang": meta.get("lang"),
+                        "start": s,
+                        "end": e,
+                        "title": fm.get("title"),
+                        "date": str(fm.get("date") or ""),
+                    })
+                    if len(docs) >= batch_size:
+                        embs = embed_batch_gemini(embed_model, docs)
+                        col.add(documents=docs, metadatas=metas, embeddings=embs, ids=ids)
+                        docs, metas, ids = [], [], []
+
+        if docs:
+            embs = embed_batch_gemini(embed_model, docs)
+            col.add(documents=docs, metadatas=metas, embeddings=embs, ids=ids)
+
+        print(f"Indexed: {collection}")
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+# -----------------------
+# ask command
+# -----------------------
+SYS_PROMPT = (
+    "You are a cybersecurity malware research assistant for posts from cocomelonc.github.io. "
+    "Answer strictly based on the provided context. "
+    'Cite sources as [title](URL) immediately after relevant statements. '
+    "Focus on educational and practice oriented explanations of code."
+)
+
+def retrieve(q: str, collection: str, k: int = 8) -> List[Tuple[str, dict]]:
+    chroma = chromadb.Client(Settings(is_persistent=True, persist_directory=".chroma"))
+    col = chroma.get_collection(collection_name=collection)
+    res = col.query(query_texts=[q], n_results=k, include=["documents", "metadatas"])
+    return list(zip(res["documents"][0], res["metadatas"][0]))
+
+def build_messages(query: str, ctx: List[Tuple[str, dict]]):
+    blocks: List[str] = []
+    for i, (doc, m) in enumerate(ctx, 1):
+        title = m.get("title") or m.get("heading") or m.get("path")
+        url = m.get("url") or m.get("path")
+        blocks.append(f"[{i}] {title} — {url}\n{doc}")
+    ctx_text = "\n\n".join(blocks)
+
+    user = f"""\
+Question: {query}
+
+Context:
+{ctx_text}
+
+Instructions:
+1) Be concise and precise.
+2) If context is insufficient, say so clearly and suggest where to look.
+3) Cite sources as [title](URL) after each relevant statement.
+"""
+    return [
+        types.Content(role="system", parts=[types.Part.from_text(SYS_PROMPT)]),
+        types.Content(role="user", parts=[types.Part.from_text(textwrap.dedent(user))]),
+    ]
+
+def generate_answer(model: str, messages) -> str:
+    cfg = types.GenerateContentConfig(temperature=0.4, max_output_tokens=1200)
+    resp = _gem_client.models.generate_content(model=model, contents=messages, config=cfg)
+    return getattr(resp, "text", "") or ""
+
+def cmd_ask(question: str):
+    cfg = load_cfg()
+    ctx = retrieve(question, cfg.get("collection", "cocomelonc_blog"), k=8)
+    msgs = build_messages(question, ctx)
+    ans = generate_answer(cfg.get("gen_model", "gemini-2.5-flash"), msgs)
+    print(ans)
+
+# -----------------------
+# simple CLI entrypoint
+# -----------------------
+def main():
+    import argparse
+
+    parser = argparse.ArgumentParser(description="cocomelonc blog RAG (Gemini CLI)")
+    sub = parser.add_subparsers(dest="cmd", required=True)
+
+    p_index = sub.add_parser("index", help="index/refresh embeddings from the blog repo")
+    p_ask = sub.add_parser("ask", help='ask a question grounded in the indexed posts')
+    p_ask.add_argument("question", help='your question, e.g. "Explain RC5 vs Speck"')
+
+    args = parser.parse_args()
+    if args.cmd == "index":
+        cmd_index()
+    elif args.cmd == "ask":
+        cmd_ask(args.question)
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,6 @@
+google-genai
+chromadb
+pyyaml
+python-frontmatter
+markdown-it-py
+tenacity
