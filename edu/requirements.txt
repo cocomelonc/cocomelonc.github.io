@@ -1,6 +1,5 @@
-google-genai
+ollama
 chromadb
 pyyaml
 python-frontmatter
 markdown-it-py
-tenacity

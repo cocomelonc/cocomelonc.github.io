@@ -1,8 +1,5 @@
 from __future__ import annotations
 import fnmatch
-import shutil
-import subprocess
-import tempfile
 import textwrap
 import uuid
 from pathlib import Path
@@ -14,15 +11,11 @@ import chromadb
 from chromadb.config import Settings
 from markdown_it import MarkdownIt
 
-# === gemini API key (educational placeholder) ===
-# replace with your real key before use.
-GEMINI_API_KEY = "YOUR_KEY_HERE"
-
-from google import genai
-from google.genai import types
-
-# single global gemini client.
-_gem_client = genai.Client(api_key=GEMINI_API_KEY)
+# === local llm (ollama) ===
+# make sure you have `ollama` installed and models pulled:
+# ollama pull nomic-embed-text
+# ollama pull llama3.1:8b
+import ollama
 
 MD = MarkdownIt()
 
@@ -31,14 +24,6 @@ MD = MarkdownIt()
 # -----------------------
 def load_cfg(path: str = "config.yaml") -> dict:
     return yaml.safe_load(Path(path).read_text(encoding="utf-8"))
-
-def clone_or_checkout(repo: str, branch: str) -> Path:
-    tmp = Path(tempfile.mkdtemp(prefix="blog_repo_"))
-    subprocess.run(
-        ["git", "clone", "--depth", "1", "-b", branch, repo, str(tmp)],
-        check=True,
-    )
-    return tmp
 
 def match_any(p: Path, patterns: List[str]) -> bool:
     s = p.as_posix()
@@ -96,27 +81,34 @@ def chunk_text(text: str, size: int, overlap: int):
             break
         start = max(0, end - overlap)
 
-def embed_batch_gemini(model: str, texts: List[str]) -> List[List[float]]:
+def embed_batch_ollama(model: str, texts: List[str]) -> List[List[float]]:
     """
-    gemini embeddings (text-embedding-004). simple per-text loop.
+    ollama embeddings via nomic-embed-text (or any embedding model).
     """
-    out: List[List[float]] = []
+    embs: List[List[float]] = []
     for t in texts:
-        r = _gem_client.models.embed_content(model=model, content=t)
-        out.append(r.embedding.values)
-    return out
+        try:
+            r = ollama.embeddings(model=model, input=t)
+            embs.append(r["embedding"])
+        except Exception as e:
+            raise RuntimeError(f"Ollama embeddings failed: {e}")
+    return embs
 
 # -----------------------
-# index command
+# index command (local path)
 # -----------------------
 def cmd_index():
     cfg = load_cfg()
-    repo = cfg["repo"]
-    branch = cfg.get("branch", "main")
+
+    # use local repo path directly
+    repo_path = Path(cfg.get("local_repo_path", ".")).resolve()
+    if not repo_path.exists():
+        raise SystemExit(f"Local repository path not found: {repo_path}")
+
     inc = cfg.get("include_globs", ["_posts/**/*.md"])
     exc = cfg.get("exclude_globs", [])
     collection = cfg.get("collection", "cocomelonc_blog")
-    embed_model = cfg.get("embed_model", "text-embedding-004")
+    embed_model = cfg.get("embed_model", "nomic-embed-text")
     size = int(cfg.get("chunk_chars", 1200))
     ovlp = int(cfg.get("chunk_overlap", 180))
     base_url = cfg.get("base_url", "")
@@ -125,69 +117,74 @@ def cmd_index():
         {"split_by_headings": True, "code_as_separate_chunks": True, "include_front_matter": True},
     )
 
-    tmp = clone_or_checkout(repo, branch)
+    # sanity: check Ollama daemon
     try:
-        chroma = chromadb.Client(Settings(is_persistent=True, persist_directory=".chroma"))
+        _ = ollama.list()
+    except Exception as e:
+        raise SystemExit(
+            f"Ollama is not running or not installed: {e}\n"
+            f"Install: https://ollama.com | Start: `ollama serve`"
+        )
 
-        # Recreate collection for a clean index
-        if collection in [c.name for c in chroma.list_collections()]:
-            chroma.delete_collection(collection)
-        col = chroma.create_collection(collection)
+    chroma = chromadb.Client(Settings(is_persistent=True, persist_directory=".chroma"))
 
-        docs, ids, metas = [], [], []
-        batch_size = 64
+    # recreate collection for a clean index
+    if collection in [c.name for c in chroma.list_collections()]:
+        chroma.delete_collection(collection)
+    col = chroma.create_collection(collection)
 
-        for f in iter_files(tmp, inc, exc):
-            raw = f.read_text(encoding="utf-8", errors="ignore")
-            post = frontmatter.loads(raw)
-            fm = post.metadata or {}
-            body = str(post.content)
+    docs, ids, metas = [], [], []
+    batch_size = 64
 
-            parts = split_markdown_sections(body) if md_cfg.get("split_by_headings", True) else [
-                ("section", body, {})
-            ]
+    for f in iter_files(repo_path, inc, exc):
+        raw = f.read_text(encoding="utf-8", errors="ignore")
+        post = frontmatter.loads(raw)
+        fm = post.metadata or {}
+        body = str(post.content)
 
-            rel = f.relative_to(tmp).as_posix()
-            url = base_url + rel if base_url else rel
+        parts = split_markdown_sections(body) if md_cfg.get("split_by_headings", True) else [
+            ("section", body, {})
+        ]
 
-            for typ, content, meta in parts:
-                if not content.strip():
-                    continue
-                for chunk, s, e in chunk_text(content, size, ovlp):
-                    ids.append(str(uuid.uuid4()))
-                    docs.append(chunk)
-                    metas.append({
-                        "path": rel,
-                        "url": url,
-                        "type": typ,
-                        "heading": meta.get("heading"),
-                        "lang": meta.get("lang"),
-                        "start": s,
-                        "end": e,
-                        "title": fm.get("title"),
-                        "date": str(fm.get("date") or ""),
-                    })
-                    if len(docs) >= batch_size:
-                        embs = embed_batch_gemini(embed_model, docs)
-                        col.add(documents=docs, metadatas=metas, embeddings=embs, ids=ids)
-                        docs, metas, ids = [], [], []
+        rel = f.relative_to(repo_path).as_posix()
+        url = base_url + rel if base_url else rel
 
-        if docs:
-            embs = embed_batch_gemini(embed_model, docs)
-            col.add(documents=docs, metadatas=metas, embeddings=embs, ids=ids)
+        for typ, content, meta in parts:
+            if not content.strip():
+                continue
+            for chunk, s, e in chunk_text(content, size, ovlp):
+                ids.append(str(uuid.uuid4()))
+                docs.append(chunk)
+                metas.append({
+                    "path": rel,
+                    "url": url,
+                    "type": typ,
+                    "heading": meta.get("heading"),
+                    "lang": meta.get("lang"),
+                    "start": s,
+                    "end": e,
+                    "title": fm.get("title"),
+                    "date": str(fm.get("date") or ""),
+                })
+                if len(docs) >= batch_size:
+                    embs = embed_batch_ollama(embed_model, docs)
+                    col.add(documents=docs, metadatas=metas, embeddings=embs, ids=ids)
+                    docs, metas, ids = [], [], []
 
-        print(f"Indexed: {collection}")
-    finally:
-        shutil.rmtree(tmp, ignore_errors=True)
+    if docs:
+        embs = embed_batch_ollama(embed_model, docs)
+        col.add(documents=docs, metadatas=metas, embeddings=embs, ids=ids)
+
+    print(f"Indexed: {collection}")
 
 # -----------------------
 # ask command
 # -----------------------
 SYS_PROMPT = (
-    "You are a cybersecurity malware research assistant for posts from cocomelonc.github.io. "
+    "You are a malware research and threat intelligence assistant for posts from cocomelonc.github.io. "
     "Answer strictly based on the provided context. "
-    'Cite sources as [title](URL) immediately after relevant statements. '
-    "Focus on educational and practice oriented explanations of code."
+    "Cite sources as [title](URL) immediately after relevant statements. "
+    "Focus on educational and practice-oriented explanations of code."
 )
 
 def retrieve(q: str, collection: str, k: int = 8) -> List[Tuple[str, dict]]:
@@ -215,21 +212,30 @@ Instructions:
 2) If context is insufficient, say so clearly and suggest where to look.
 3) Cite sources as [title](URL) after each relevant statement.
 """
-    return [
-        types.Content(role="system", parts=[types.Part.from_text(SYS_PROMPT)]),
-        types.Content(role="user", parts=[types.Part.from_text(textwrap.dedent(user))]),
+    messages = [
+        {"role": "system", "content": SYS_PROMPT},
+        {"role": "user", "content": textwrap.dedent(user)},
     ]
+    return messages
 
 def generate_answer(model: str, messages) -> str:
-    cfg = types.GenerateContentConfig(temperature=0.4, max_output_tokens=1200)
-    resp = _gem_client.models.generate_content(model=model, contents=messages, config=cfg)
-    return getattr(resp, "text", "") or ""
+    try:
+        resp = ollama.chat(model=model, messages=messages)
+        return resp["message"]["content"]
+    except Exception as e:
+        raise RuntimeError(f"ollama chat failed: {e}")
 
 def cmd_ask(question: str):
     cfg = load_cfg()
+    # sanity: check ollama daemon
+    try:
+        _ = ollama.list()
+    except Exception as e:
+        raise SystemExit(f"ollama is not running or not installed: {e}")
+
     ctx = retrieve(question, cfg.get("collection", "cocomelonc_blog"), k=8)
-    msgs = build_messages(question, ctx)
-    ans = generate_answer(cfg.get("gen_model", "gemini-2.5-flash"), msgs)
+    messages = build_messages(question, ctx)
+    ans = generate_answer(cfg.get("gen_model", "llama3.1:8b"), messages)
     print(ans)
 
 # -----------------------
@@ -238,10 +244,10 @@ def cmd_ask(question: str):
 def main():
     import argparse
 
-    parser = argparse.ArgumentParser(description="cocomelonc blog RAG (Gemini CLI)")
+    parser = argparse.ArgumentParser(description="cocomelonc blog RAG (ollama cli, local repo path)")
     sub = parser.add_subparsers(dest="cmd", required=True)
 
-    p_index = sub.add_parser("index", help="index/refresh embeddings from the blog repo")
+    sub.add_parser("index", help="index/refresh embeddings from the local repository path")
     p_ask = sub.add_parser("ask", help='ask a question grounded in the indexed posts')
     p_ask.add_argument("question", help='your question, e.g. "Explain RC5 vs Speck"')
 
