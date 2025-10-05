@@ -1,16 +1,16 @@
 # local path to your repo (git clone https://github.com/cocomelonc/cocomelonc.github.io)
-local_repo_path: "/home/kali/cocomelonc.github.io" # <<< CHANGE THIS TO YOUR ACTUAL PATH
+local_repo_path: "/path/to/your/cocomelonc.github.io" # <<< CHANGE THIS TO YOUR ACTUAL PATH
 
 # vector DB collection name
-collection: "cocomelonc_blog"
+collection: "cocomelonc_blog_poc"
 
 # gemini models
-gen_model: "gemini-pro" # Changed to gemini-pro as gemini-2.5 is not a standard public model name yet
+gen_model: "gemini-pro"
 
 # which files to index (simple glob)
 include_globs:
   - "_posts/**/*.md"
-  - "*.md" # Added to catch markdown files directly in the root, if any
+  - "*.md"
 
 # optional excludes
 exclude_globs:
