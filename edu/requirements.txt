@@ -1,4 +1,4 @@
-google-generativeai
-python-dotenv
-numpy
-scikit-learn
+pyyaml
+chromadb
+ollama
+typing-extensions
