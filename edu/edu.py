@@ -269,6 +269,7 @@ def cmd_ask(question: str, config_path: str):
     you are an threat intelligence AI assistant that answers questions based on the provided context.
     if the answer is not available in the context, please state that you cannot answer from the given information.
     do not make up information.
+    cite sources as [title](URL) from local collection immediately after relevant statements.
     focus on safe, educational and practice oriented explanations of code.
 
     context:
