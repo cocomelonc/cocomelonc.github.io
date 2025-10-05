@@ -10,8 +10,7 @@ ollama_embed_model: "nomic-embed-text" # example: "nomic-embed-text"
 
 # which files to index (simple glob)
 include_globs:
-  - "_posts/**/*.md"
-  - "*.md"
+  - "_posts/*.markdown"
 
 # optional excludes
 exclude_globs:
