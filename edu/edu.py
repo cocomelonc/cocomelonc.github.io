@@ -3,16 +3,12 @@ import argparse
 import yaml
 import glob
 from typing import List, Dict, Tuple
-import google.generativeai as genai
-from dotenv import load_dotenv
 import chromadb
 from chromadb.utils import embedding_functions
 from chromadb.api.types import QueryResult
 import re # for cleaning text
 import sys # for exit
-
-# load environment variables from .env file
-load_dotenv()
+import ollama # new: for ollama interaction
 
 # --- configuration loading ---
 def load_config(config_path: str = "config.yaml") -> Dict:
@@ -24,34 +20,28 @@ def load_config(config_path: str = "config.yaml") -> Dict:
     with open(config_path, 'r') as f:
         return yaml.safe_load(f)
 
-# --- configure google gemini api ---
-api_key = os.getenv("GOOGLE_API_KEY")
-if not api_key:
-    raise ValueError("google_api_key not found in environment variables. please set it.")
-genai.configure(api_key=api_key)
-
-# use gemini's embedding function for chromadb
-class GeminiEmbeddingFunction(embedding_functions.EmbeddingFunction):
-    def __init__(self): # added empty constructor to avoid deprecation warning
-        pass
+# --- ollama embedding function for chromadb ---
+class OllamaEmbeddingFunction(embedding_functions.EmbeddingFunction):
+    def __init__(self, model_name: str = "nomic-embed-text"):
+        self.model_name = model_name
+        # check if ollama server is running and model is available
+        try:
+            ollama.show(self.model_name)
+            print(f"ollama embedding model '{self.model_name}' loaded successfully.")
+        except Exception as e:
+            print(f"error: ollama embedding model '{self.model_name}' not available or ollama server not running. {e}", file=sys.stderr)
+            sys.exit(1)
 
     def __call__(self, input: embedding_functions.Documents) -> embedding_functions.Embeddings:
-        model = "models/embedding-001"
         embeddings = []
-        # the gemini api might have rate limits or batch size limits,
-        # so process in smaller batches if needed, or handle errors.
-        # for simplicity, processing one by one here.
         for text_chunk in input:
             try:
-                response = genai.embed_content(model=model, content=text_chunk)
+                response = ollama.embeddings(model=self.model_name, prompt=text_chunk)
                 embeddings.append(response['embedding'])
             except Exception as e:
-                print(f"error generating embedding for chunk: {text_chunk[:50]}... error: {e}", file=sys.stderr)
-                embeddings.append([]) # append an empty list or handle as appropriate
+                print(f"error generating ollama embedding for chunk: {text_chunk[:50]}... error: {e}", file=sys.stderr)
+                embeddings.append([])
         return embeddings
-
-# initialize the gemini embedding function for chromadb
-gemini_ef = GeminiEmbeddingFunction()
 
 # --- helper functions ---
 
@@ -104,12 +94,10 @@ def clean_text_for_embedding(text: str) -> str:
 
 class KnowledgeBase:
     def __init__(self, collection_name: str, embedding_function: embedding_functions.EmbeddingFunction):
-        self.client = chromadb.PersistentClient(path="./chroma_db") # stores db files in ./chroma_db
+        self.client = chromadb.PersistentClient(path="./chroma_db_ollama") # stores db files in ./chroma_db_ollama
         self.collection_name = collection_name # store collection name
         self.embedding_function = embedding_function # store embedding function
 
-        # get or create collection. this will be called when we need it.
-        # we'll handle explicit clearing in index_repository.
         self.collection = self.client.get_or_create_collection(
             name=self.collection_name,
             embedding_function=self.embedding_function
@@ -136,7 +124,7 @@ class KnowledgeBase:
             print("no files found to index after applying globs. please check your config.", file=sys.stderr)
             return
 
-        # --- fix: delete and re-create collection to ensure a clean slate ---
+        # delete and re-create collection to ensure a clean slate
         print(f"deleting and re-creating collection '{self.collection_name}' for fresh indexing...")
         try:
             self.client.delete_collection(name=self.collection_name)
@@ -151,7 +139,6 @@ class KnowledgeBase:
                 name=self.collection_name,
                 embedding_function=self.embedding_function
             )
-        # --- end fix ---
         
         documents_to_add = []
         metadatas_to_add = []
@@ -224,18 +211,22 @@ class KnowledgeBase:
 
 class LLMAssistant:
     def __init__(self, model_name: str):
-        self.model = genai.GenerativeModel(model_name)
-        print(f"gemini llm initialized with model: {model_name}")
+        self.model_name = model_name
+        try:
+            ollama.show(self.model_name) # check if model exists
+            print(f"ollama llm initialized with model: {model_name}")
+        except Exception as e:
+            print(f"error: ollama generative model '{self.model_name}' not available or ollama server not running. {e}", file=sys.stderr)
+            sys.exit(1)
+
 
     def generate_response(self, prompt: str) -> str:
         """
-        generates a response using the gemini model.
+        generates a response using the ollama model.
         """
         try:
-            response = self.model.generate_content(prompt)
-            return response.text
-        except genai.types.BlockedPromptException as e:
-            return f"error: prompt blocked due to safety concerns. {e}"
+            response = ollama.chat(model=self.model_name, messages=[{'role': 'user', 'content': prompt}])
+            return response['message']['content']
         except Exception as e:
             return f"error generating response from llm: {e}"
 
@@ -244,21 +235,23 @@ class LLMAssistant:
 def cmd_index(config_path: str):
     config = load_config(config_path)
     collection_name = config['collection']
-    
-    # knowledge_base constructor initializes/gets the collection.
-    # the index_repository method will handle deletion and recreation for a fresh index.
-    knowledge_base = KnowledgeBase(collection_name=collection_name, embedding_function=gemini_ef)
+    ollama_embed_model = config['ollama_embed_model']
+
+    ollama_ef = OllamaEmbeddingFunction(model_name=ollama_embed_model)
+    knowledge_base = KnowledgeBase(collection_name=collection_name, embedding_function=ollama_ef)
     knowledge_base.index_repository(config)
     print("indexing complete.")
 
 def cmd_ask(question: str, config_path: str):
     config = load_config(config_path)
     collection_name = config['collection']
-    gen_model = config['gen_model']
+    ollama_gen_model = config['ollama_gen_model']
+    ollama_embed_model = config['ollama_embed_model'] # need embed model to initialize knowledge_base
 
-    knowledge_base = KnowledgeBase(collection_name=collection_name, embedding_function=gemini_ef)
+    ollama_ef = OllamaEmbeddingFunction(model_name=ollama_embed_model)
+    knowledge_base = KnowledgeBase(collection_name=collection_name, embedding_function=ollama_ef)
     
-    llm_assistant = LLMAssistant(model_name=gen_model)
+    llm_assistant = LLMAssistant(model_name=ollama_gen_model)
 
     print(f"\nasking: '{question}'")
 
@@ -297,7 +290,7 @@ def cmd_ask(question: str, config_path: str):
 # --- main cli logic ---
 
 def main():
-    p = argparse.ArgumentParser(description="tiny local rag (gemini) - poc")
+    p = argparse.ArgumentParser(description="tiny local rag (ollama) - poc")
     p.add_argument("--config", default="config.yaml", help="path to the yaml configuration file (default: config.yaml)")
 
     sub = p.add_subparsers(dest="cmd", required=True)

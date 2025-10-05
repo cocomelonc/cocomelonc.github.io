@@ -1,11 +1,12 @@
 # local path to your repo (git clone https://github.com/cocomelonc/cocomelonc.github.io)
-local_repo_path: "/path/to/your/cocomelonc.github.io" # <<< CHANGE THIS TO YOUR ACTUAL PATH
+local_repo_path: "/path/to/your/cocomelonc.github.io" # <<< change this to your actual path
 
-# vector DB collection name
-collection: "cocomelonc_blog_poc"
+# vector db collection name
+collection: "cocomelonc_blog" # changed collection name to differentiate
 
-# gemini models
-gen_model: "gemini-pro"
+# ollama models
+ollama_gen_model: "llama3.1:8b"       # example: "llama2", "mistral", "gemma"
+ollama_embed_model: "nomic-embed-text" # example: "nomic-embed-text"
 
 # which files to index (simple glob)
 include_globs:
