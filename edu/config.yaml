@@ -1,32 +1,26 @@
-# path to your existing local blog repo (no cloning needed)
+# local path to your repo (no git clone)
 local_repo_path: "/home/kali/cocomelonc.github.io"
-branch: "main"  # unused now, kept for compatibility
 
-# what to include/exclude during indexing
+# vector DB collection name
+collection: "cocomelonc_blog_poc"
+
+# ollama models
+embed_model: "nomic-embed-text"
+gen_model: "llama3.1:8b"
+
+# which files to index (simple glob)
 include_globs:
   - "_posts/**/*.md"
-  - "**/*.md"
+
+# optional excludes
 exclude_globs:
   - ".git/**"
   - "_site/**"
   - "vendor/**"
 
-# vector DB collection
-collection: "cocomelonc_blog"
-
-# ollama models
-embed_model: "nomic-embed-text"   # embeddings (Ollama)
-gen_model: "llama3.1:8b"          # chat LLM (Ollama); change if you prefer
-
-# chunking
+# simple character chunking
 chunk_chars: 1200
-chunk_overlap: 180
+chunk_overlap: 200
 
-# markdown parsing
-md:
-  split_by_headings: true
-  code_as_separate_chunks: true
-  include_front_matter: true
-
-# for human-friendly links back to GitHub sources (optional)
+# optional: used for pretty source links in answers
 base_url: "https://github.com/cocomelonc/cocomelonc.github.io/blob/main/"
