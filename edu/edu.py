@@ -81,18 +81,27 @@ def chunk_text(text: str, size: int, overlap: int):
             break
         start = max(0, end - overlap)
 
-def embed_batch_ollama(model: str, texts: List[str]) -> List[List[float]]:
+def embed_batch_ollama(model: str, texts: list[str]) -> list[list[float]]:
     """
-    ollama embeddings via nomic-embed-text (or any embedding model).
+    Ollama embeddings via nomic-embed-text.
+    Supports both SDK signatures:
+      - embeddings(model=..., prompt="...")
+      - embeddings(model=..., input="...")  # newer
     """
-    embs: List[List[float]] = []
+    embs: list[list[float]] = []
     for t in texts:
         try:
+            # older SDKs
+            r = ollama.embeddings(model=model, prompt=t)
+            embs.append(r["embedding"])
+        except TypeError:
+            # newer SDKs
             r = ollama.embeddings(model=model, input=t)
             embs.append(r["embedding"])
         except Exception as e:
-            raise RuntimeError(f"Ollama embeddings failed: {e}")
+            raise RuntimeError(f"ollama embeddings failed: {e}")
     return embs
+
 
 # -----------------------
 # index command (local path)
@@ -103,7 +112,7 @@ def cmd_index():
     # use local repo path directly
     repo_path = Path(cfg.get("local_repo_path", ".")).resolve()
     if not repo_path.exists():
-        raise SystemExit(f"Local repository path not found: {repo_path}")
+        raise SystemExit(f"local repository path not found: {repo_path}")
 
     inc = cfg.get("include_globs", ["_posts/**/*.md"])
     exc = cfg.get("exclude_globs", [])
@@ -122,8 +131,8 @@ def cmd_index():
         _ = ollama.list()
     except Exception as e:
         raise SystemExit(
-            f"Ollama is not running or not installed: {e}\n"
-            f"Install: https://ollama.com | Start: `ollama serve`"
+            f"ollama is not running or not installed: {e}\n"
+            f"install: https://ollama.com | start: `ollama serve`"
         )
 
     chroma = chromadb.Client(Settings(is_persistent=True, persist_directory=".chroma"))
@@ -175,7 +184,7 @@ def cmd_index():
         embs = embed_batch_ollama(embed_model, docs)
         col.add(documents=docs, metadatas=metas, embeddings=embs, ids=ids)
 
-    print(f"Indexed: {collection}")
+    print(f"indexed: {collection}")
 
 # -----------------------
 # ask command
