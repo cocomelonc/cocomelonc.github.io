@@ -37,15 +37,49 @@ def chunk_text(text: str, size: int, overlap: int):
         start = max(0, end - overlap)
 
 def embed_batch_ollama(model: str, texts: List[str]) -> List[List[float]]:
+    """ollama embeddings; support old/new SDK signatures."""
     embs: List[List[float]] = []
     for t in texts:
-        # Support both SDK signatures (older: prompt=, newer: input=)
         try:
-            r = ollama.embeddings(model=model, prompt=t)
+            r = ollama.embeddings(model=model, prompt=t)  # older SDK
         except TypeError:
-            r = ollama.embeddings(model=model, input=t)
+            r = ollama.embeddings(model=model, input=t)   # newer SDK
         embs.append(r["embedding"])
     return embs
+
+# ---------- chroma compat helpers ----------
+
+def chroma_client() -> chromadb.Client:
+    return chromadb.Client(Settings(is_persistent=True, persist_directory=".chroma"))
+
+def create_collection_compat(client: chromadb.Client, name: str):
+    """create or recreate a collection across chroma API variants."""
+    # delete if exists
+    try:
+        # newer/most versions: list_collections() -> objects with .name
+        existing = [c.name for c in client.list_collections()]
+        if name in existing:
+            client.delete_collection(name=name)
+    except TypeError:
+        # Older signature: delete_collection(collection_name=...)
+        client.delete_collection(collection_name=name)
+
+    # create with name=
+    try:
+        return client.create_collection(name=name)
+    except TypeError:
+        # older signature: positional or collection_name=
+        try:
+            return client.create_collection(name)  # positional
+        except TypeError:
+            return client.create_collection(collection_name=name)
+
+def get_collection_compat(client: chromadb.Client, name: str):
+    """get a collection across chroma API variants."""
+    try:
+        return client.get_collection(name=name)
+    except TypeError:
+        return client.get_collection(collection_name=name)
 
 # ---------- index ----------
 
@@ -69,12 +103,8 @@ def cmd_index():
     except Exception as e:
         raise SystemExit(f"ollama not running/installed: {e}\nStart with: `ollama serve`")
 
-    client = chromadb.Client(Settings(is_persistent=True, persist_directory=".chroma"))
-
-    # recreate collection for run
-    if collection in [c.name for c in client.list_collections()]:
-        client.delete_collection(collection)
-    col = client.create_collection(collection)
+    client = chroma_client()
+    col = create_collection_compat(client, collection)
 
     docs, ids, metas = [], [], []
     BATCH = 64
@@ -113,17 +143,12 @@ SYS_PROMPT = (
 )
 
 def retrieve(q: str, collection: str, k: int = 6):
-    client = chromadb.Client(Settings(is_persistent=True, persist_directory=".chroma"))
-    # chroma API compatibility: prefer name=, fallback to collection_name=
-    try:
-        col = client.get_collection(name=collection)
-    except TypeError:
-        col = client.get_collection(collection_name=collection)
+    client = chroma_client()
+    col = get_collection_compat(client, collection)
     res = col.query(query_texts=[q], n_results=k, include=["documents", "metadatas"])
     docs = res["documents"][0]
     metas = res["metadatas"][0]
     return list(zip(docs, metas))
-
 
 def build_messages(query: str, ctx: List[Tuple[str, dict]]):
     blocks = []
