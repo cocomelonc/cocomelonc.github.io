@@ -1,4 +1,4 @@
-# local path to your repo (no git clone)
+# local path to your repo (git clone https://github.com/cocomelonc/cocomelonc.github.io)
 local_repo_path: "/home/kali/cocomelonc.github.io"
 
 # vector DB collection name

@@ -61,7 +61,7 @@ def create_collection_compat(client: chromadb.Client, name: str):
         if name in existing:
             client.delete_collection(name=name)
     except TypeError:
-        # Older signature: delete_collection(collection_name=...)
+        # older signature: delete_collection(collection_name=...)
         client.delete_collection(collection_name=name)
 
     # create with name=
