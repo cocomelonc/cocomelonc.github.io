@@ -32,6 +32,9 @@ genai.configure(api_key=api_key)
 
 # use gemini's embedding function for chromadb
 class GeminiEmbeddingFunction(embedding_functions.EmbeddingFunction):
+    def __init__(self): # added empty constructor to avoid deprecation warning
+        pass
+
     def __call__(self, input: embedding_functions.Documents) -> embedding_functions.Embeddings:
         model = "models/embedding-001"
         embeddings = []
@@ -129,7 +132,7 @@ class KnowledgeBase:
 
         # clear existing data in collection before re-indexing
         print(f"clearing existing data in collection '{self.collection.name}'...")
-        self.collection.clear()
+        self.collection.delete(ids=None, where=None, where_document=None) # fix for attributeerror
         
         documents_to_add = []
         metadatas_to_add = []
@@ -247,8 +250,9 @@ def cmd_ask(question: str, config_path: str):
 
     context_text = "\n\n".join([f"source: {source_url}\ncontent:\n{chunk}" for chunk, source_url in relevant_chunks])
 
+    # updated rag prompt as requested
     rag_prompt = f"""
-    you are an ai malware reseach and threat intelligence assistant that answers questions based on the provided context.
+    you are an ai malware research and threat intelligence assistant that answers questions based on the provided context.
     if the answer is not available in the context, please state that you cannot answer from the given information.
     do not make up information.
 
