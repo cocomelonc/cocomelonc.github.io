@@ -105,11 +105,17 @@ def clean_text_for_embedding(text: str) -> str:
 class KnowledgeBase:
     def __init__(self, collection_name: str, embedding_function: embedding_functions.EmbeddingFunction):
         self.client = chromadb.PersistentClient(path="./chroma_db") # stores db files in ./chroma_db
+        self.collection_name = collection_name # store collection name
+        self.embedding_function = embedding_function # store embedding function
+
+        # get or create collection. this will be called when we need it.
+        # we'll handle explicit clearing in index_repository.
         self.collection = self.client.get_or_create_collection(
-            name=collection_name,
-            embedding_function=embedding_function
+            name=self.collection_name,
+            embedding_function=self.embedding_function
         )
-        print(f"chromadb collection '{collection_name}' initialized.")
+        print(f"chromadb collection '{self.collection_name}' initialized.")
+
 
     def index_repository(self, config: Dict):
         repo_path = config['local_repo_path']
@@ -130,9 +136,22 @@ class KnowledgeBase:
             print("no files found to index after applying globs. please check your config.", file=sys.stderr)
             return
 
-        # clear existing data in collection before re-indexing
-        print(f"clearing existing data in collection '{self.collection.name}'...")
-        self.collection.delete(ids=None, where=None, where_document=None) # fix for attributeerror
+        # --- fix: delete and re-create collection to ensure a clean slate ---
+        print(f"deleting and re-creating collection '{self.collection_name}' for fresh indexing...")
+        try:
+            self.client.delete_collection(name=self.collection_name)
+            self.collection = self.client.get_or_create_collection(
+                name=self.collection_name,
+                embedding_function=self.embedding_function
+            )
+        except Exception as e:
+            # this might happen if the collection never existed, which is fine.
+            print(f"warning: could not delete collection (might not exist yet): {e}", file=sys.stderr)
+            self.collection = self.client.get_or_create_collection( # ensure it's created even if delete failed
+                name=self.collection_name,
+                embedding_function=self.embedding_function
+            )
+        # --- end fix ---
         
         documents_to_add = []
         metadatas_to_add = []
@@ -172,7 +191,7 @@ class KnowledgeBase:
                 metadatas=metadatas_to_add,
                 ids=ids_to_add
             )
-            print(f"indexed {doc_counter} chunks into collection '{self.collection.name}'.")
+            print(f"indexed {doc_counter} chunks into collection '{self.collection_name}'.")
         else:
             print("no documents to add after processing.", file=sys.stderr)
 
@@ -226,6 +245,8 @@ def cmd_index(config_path: str):
     config = load_config(config_path)
     collection_name = config['collection']
     
+    # knowledge_base constructor initializes/gets the collection.
+    # the index_repository method will handle deletion and recreation for a fresh index.
     knowledge_base = KnowledgeBase(collection_name=collection_name, embedding_function=gemini_ef)
     knowledge_base.index_repository(config)
     print("indexing complete.")
