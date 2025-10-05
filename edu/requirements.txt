@@ -1,5 +1,4 @@
-ollama
-chromadb
-pyyaml
-python-frontmatter
-markdown-it-py
+google-generativeai
+python-dotenv
+numpy
+scikit-learn

@@ -1,16 +1,16 @@
 # local path to your repo (git clone https://github.com/cocomelonc/cocomelonc.github.io)
-local_repo_path: "/home/kali/cocomelonc.github.io"
+local_repo_path: "/home/kali/cocomelonc.github.io" # <<< CHANGE THIS TO YOUR ACTUAL PATH
 
 # vector DB collection name
-collection: "cocomelonc_blog_poc"
+collection: "cocomelonc_blog"
 
-# ollama models
-embed_model: "nomic-embed-text"
-gen_model: "llama3.1:8b"
+# gemini models
+gen_model: "gemini-pro" # Changed to gemini-pro as gemini-2.5 is not a standard public model name yet
 
 # which files to index (simple glob)
 include_globs:
   - "_posts/**/*.md"
+  - "*.md" # Added to catch markdown files directly in the root, if any
 
 # optional excludes
 exclude_globs:
