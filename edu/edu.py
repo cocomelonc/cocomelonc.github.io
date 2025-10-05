@@ -112,13 +112,18 @@ SYS_PROMPT = (
     "focus on educational and practice-oriented explanations of code."
 )
 
-def retrieve(q: str, collection: str, k: int = 6) -> List[Tuple[str, dict]]:
+def retrieve(q: str, collection: str, k: int = 6):
     client = chromadb.Client(Settings(is_persistent=True, persist_directory=".chroma"))
-    col = client.get_collection(collection_name=collection)
+    # chroma API compatibility: prefer name=, fallback to collection_name=
+    try:
+        col = client.get_collection(name=collection)
+    except TypeError:
+        col = client.get_collection(collection_name=collection)
     res = col.query(query_texts=[q], n_results=k, include=["documents", "metadatas"])
     docs = res["documents"][0]
     metas = res["metadatas"][0]
     return list(zip(docs, metas))
+
 
 def build_messages(query: str, ctx: List[Tuple[str, dict]]):
     blocks = []
