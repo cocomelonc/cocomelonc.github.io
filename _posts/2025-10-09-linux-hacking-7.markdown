@@ -415,11 +415,32 @@ Also perfectly worked with my kali linux distro:
 
 This is a compact, portable sysinfo collector for Linux. Of course, it's possible to make it more universal and add exception handling, but this is just a "dirty PoC".    
 
-I hope this post with practical example is useful for malware researchers, linux programmers and everyone who interested on linux kernel programming techniques.    
+Ok, let's upload this to [ANY.RUN](https://any.run):    
 
+![malware](/assets/images/179/2025-10-13_19-38.png){:class="img-responsive"}    
+
+![malware](/assets/images/179/2025-10-13_19-39.png){:class="img-responsive"}    
+
+![malware](/assets/images/179/2025-10-13_19-41.png){:class="img-responsive"}    
+
+[https://app.any.run/tasks/8c1c02a0-aac1-4e8f-a48e-d7eb416ca017](https://app.any.run/tasks/8c1c02a0-aac1-4e8f-a48e-d7eb416ca017)    
+
+ANY.RUN says that everything is ok: **no threats detected**:     
+
+![malware](/assets/images/179/2025-10-13_19-44.png){:class="img-responsive"}    
+
+I hope this post with practical example is useful for malware researchers, linux programmers and everyone who interested on linux hacking techniques.    
+
+![malware](/assets/images/162/anyrun.png)    
+
+Thanks to [ANY.RUN](https://app.any.run/) for API!     
+
+[ANY.RUN](https://app.any.run/)     
+[ANY.RUN: hack](https://app.any.run/tasks/8c1c02a0-aac1-4e8f-a48e-d7eb416ca017)     
 [Linux malware development 1: intro to kernel hacking. Simple C example](/linux/2024/06/20/linux-kernel-hacking-1.html)      
 [Linux malware development 2: find process ID by name. Simple C example](/linux/2024/09/16/linux-hacking-2.html)      
 [Linux hacking part 5: building a Linux keylogger. Simple C example](/linux/2025/06/03/linux-hacking-5.html)      
+[Linux hacking part 6: Linux kernel module with params](/linux/2025/06/23/linux-hacking-6.html)    
 [source code in github](https://github.com/cocomelonc/meow/tree/master/2025-10-09-linux-hacking-7)    
 
 > This is a practical case for educational purposes only.
