@@ -9,7 +9,9 @@ author_profile: true
 
 ### 2025
 
-MCTTP Munich Cyber Tactics, Techniques und Procedures 2025 - Deanon Hackers via Public Leaks: Tracking APT Groups using Leaks       
+[Hack.lu 2025 - Exploiting legit APIs for Covert C2: A New Perspective On Cloud-based Malware Operations](https://www.youtube.com/watch?v=l2G2TZvzj0E)     
+[MCTTP Munich Cyber Tactics, Techniques und Procedures 2025 - Deanon Hackers via Public Leaks: Tracking APT Groups using Leaks](https://youtu.be/GEcrfdayfQA?si=cvJUV-QmrqEjeIMe)       
+Security BSides Ahmedabad 2025 - Deanon Hackers via Public Leaks: Tracking APT Groups using Leaks     
 
 ### 2024
 
