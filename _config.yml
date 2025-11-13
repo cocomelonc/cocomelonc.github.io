@@ -71,7 +71,7 @@ naver_site_verification  :
 
 # Social Sharing
 twitter:
-  username               : "cocomelonc"
+  username               : "cocomelonckz"
 facebook:
   username               :
   app_id                 :
@@ -119,7 +119,6 @@ footer:
     - label: "Twitter"
       icon: "fab fa-twitter"
       url: "https://twitter.com/cocomelonckz"
-      url: "https://tryhackme.com/p/cocomelonc"
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
       url: "https://github.com/cocomelonc/"
