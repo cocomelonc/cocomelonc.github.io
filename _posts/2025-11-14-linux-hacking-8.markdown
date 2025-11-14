@@ -368,6 +368,10 @@ Now, let's try the correct password:
 
 As you can see, after entering "meow", we are granted access to a shell. Everything worked as expected! Perfect! =^..^=     
 
+Also worked on my linux popOS:     
+
+![malware](/assets/images/184/2025-11-14_10-26.png){:class="img-responsive"}    
+
 ### final words
 
 This exercise is more than just building a tool; it's about peeling back the layers of abstraction to understand *what's really happening on your system*. By writing this bindshell, you've worked directly with the Linux kernel through syscalls, managed memory on the stack, and handled network connections at a fundamental level. You now have a concrete understanding of how shells are spawned and how I/O redirection works under the hood.     
