@@ -1,5 +1,5 @@
 ---
-title:  "How to \"hack\" your Epson printer"
+title:  "HVCK magazine - issue 1: How to \"hack\" your Epson printer"
 date:   2025-12-02 03:00:00 +0200
 header:
   teaser: "/assets/images/185/photo_2023-01-03_22-37-06.jpg"
