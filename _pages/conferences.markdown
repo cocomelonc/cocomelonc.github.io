@@ -7,6 +7,9 @@ author_profile: true
 
 ![conferences](/assets/images/conferences.jpg){:class="img-responsive"}      
 
+### 2026
+[IdentityShield Summit 2026 -  AI and Cryptography for Evasive Malware](https://identityshield.miniorange.com/)     
+
 ### 2025
 
 PHTalks Sao Paolo 2025 - Malware and Hunting for Persistence 2025: how adversaries hack your Windows?     
