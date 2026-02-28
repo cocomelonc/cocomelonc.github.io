@@ -41,3 +41,8 @@ Most of the example in this training require an understanding of the C/C++ and K
 
 You can find some materials at GitHub (only some introduction examples):     
 [https://github.com/cocomelonc/bsprishtina-2024-maldev-workshop/](https://github.com/cocomelonc/bsprishtina-2024-maldev-workshop/)     
+
+### Partners
+
+[https://redteamacademy.com/](https://redteamacademy.com/)     
+[https://www.leetprotect.com/](https://www.leetprotect.com/)     
