@@ -144,7 +144,7 @@ And when we run this keylogger, we will see the keycode for each key pressed on 
 ./hack
 ```
 
-![malware](../assets/images/157/2025-06-08_14-39.png){:class="img-responsive"}    
+![malware](/assets/images/157/2025-06-08_14-39.png){:class="img-responsive"}    
 
 As you can see, everything is worked perfectly! =^..^=    
 
