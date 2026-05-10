@@ -179,7 +179,7 @@ gcc -z execstack hack.c -o hack
 Then run it in linux machine:     
 
 ```bash
-.\hack [process_name]
+./hack [process_name]
 ```
 
 ![linux](/assets/images/134/2024-09-16_17-35.png){:class="img-responsive"}     
@@ -193,7 +193,7 @@ It all seems very easy, doesn't it?
 But there is a caveat. If we try to run it for processes like `firefox` in my example:     
 
 ```bash
-.\hack firefox
+./hack firefox
 ```
 
 we got:    
