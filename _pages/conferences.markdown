@@ -8,6 +8,7 @@ author_profile: true
 ![conferences](/assets/images/conferences.jpg){:class="img-responsive"}      
 
 ### 2026
+[BSides Prishtina 2026 - Signal processing and math for malware RnD for fun and profit](https://sessionize.com/s/zhassulan-zhussupov/signal-processing-and-math-for-malware-rd-for-fun-/169581)     
 [Bsides Luxembourg 2026 - AI and Cryptography for Evasive Malware](https://pretalx.com/bsidesluxembourg-2026/talk/Q7CEUD/)    
 [DEFCON Singapore 2026 Demo Labs - peekaboo](https://defcon.org/html/defcon-singapore/dc-singapore-demolabs.html)     
 [2026 FIRST Regional Symposium for Central Asia - Malware Development for Ethical Hackers](https://www.first.org/events/symposium/central-asia2026/program#pMalware-Development-for-Ethical-Hackers-Windows-Linux-Android-Full-Day)      
