@@ -549,10 +549,10 @@ From a defensive perspective, GOT integrity can be monitored with tools that com
 
 I hope this post with practical examples is useful for malware researchers, linux programmers and everyone who is interested in linux hacking techniques.
 
-[Linux hacking part 10: Shared library injection and hijacking. Simple C examples](/linux/2026/03/12/linux-hacking-10.html)
-[Linux malware development 3: linux process injection with ptrace. Simple C example](/linux/2024/11/22/linux-hacking-3.html)
-[Winnti](https://malpedia.caad.fkie.fraunhofer.de/details/elf.winnti)
-[source code in github](https://github.com/cocomelonc/meow/tree/master/2026-06-17-linux-hacking-11)
+[Linux hacking part 10: Shared library injection and hijacking. Simple C examples](/linux/2026/03/12/linux-hacking-10.html)    
+[Linux malware development 3: linux process injection with ptrace. Simple C example](/linux/2024/11/22/linux-hacking-3.html)    
+[Winnti](https://malpedia.caad.fkie.fraunhofer.de/details/elf.winnti)    
+[source code in github](https://github.com/cocomelonc/meow/tree/master/2026-06-17-linux-hacking-11)    
 
 > This is a practical case for educational purposes only.
 
