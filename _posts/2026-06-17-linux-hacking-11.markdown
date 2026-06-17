@@ -57,6 +57,7 @@ Let's start from victim. The victim is intentionally minimal - it just announces
  * meow.c
  * simple target process for GOT/PLT hijacking demo
  * author: @cocomelonc
+ * https://cocomelonc.github.io/linux/2026/06/17/linux-hacking-11.html
  */
 #include <stdio.h>
 #include <unistd.h>
@@ -267,6 +268,7 @@ So, full source code of `meow. c`:
  * meow.c
  * simple target process for GOT/PLT hijacking demo
  * author: @cocomelonc
+ * https://cocomelonc.github.io/linux/2026/06/17/linux-hacking-11.html
  */
 #include <stdio.h>
 #include <unistd.h>
@@ -289,6 +291,7 @@ Full source code of `hack.c`:
  * GOT/PLT hijacking: attaches to a running process via ptrace,
  * injects an rwx page, writes hook shellcode, overwrites puts@got
  * author: @cocomelonc
+ * https://cocomelonc.github.io/linux/2026/06/17/linux-hacking-11.html
  */
 #include <stdio.h>
 #include <stdlib.h>
