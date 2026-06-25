@@ -20,7 +20,7 @@ Hello, cybersecurity enthusiasts and white hackers!
 
 ![ddos-wavelet](/assets/images/209/2026-06-25_11-53.png){:class="img-responsive"}    
 
-Today I want to start a small defensive research series about DDoS detection mechanisms (Anti-DDoS). This research not used production architecture, no private telemetry, no vendor internals (Since I sign my NDA with one of the best companies in my country). Just one simple idea, one small C program, and one reproducible graph.     
+Today I want to start a small defensive research series about DDoS detection mechanisms (Anti-DDoS). This research not used production architecture, no private telemetry, no vendor internals (since I sign my NDA with one of the best companies in my country). Just one simple idea, one small C program, and one reproducible graph.     
 
 The question for this post is:     
 
