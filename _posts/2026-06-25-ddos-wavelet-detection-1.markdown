@@ -1,5 +1,5 @@
 ---
-title:  "Anti-DDoS research: detecting short traffic anomalies with Haar wavelets. Simple C example."
+title:  "Anti-DDoS research part 1: detecting short traffic anomalies with Haar wavelets. Simple C example."
 date:   2026-06-25 06:00:00 +0300
 header:
   teaser: "/assets/images/209/2026-06-25_11-53.png"
