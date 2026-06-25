@@ -616,20 +616,20 @@ If you want to go deeper into the math and the research behind this post, here a
 
 **Wavelets and signal analysis of network traffic**    
 
-P. Barford, J. Kline, D. Plonka, A. Ron. *A Signal Analysis of Network Traffic Anomalies* (ACM SIGCOMM Internet Measurement Workshop, 2002) - [pdf](https://pages.cs.wisc.edu/~pb/imw02_final.pdf). The classic paper on using wavelet decomposition to expose short-lived traffic anomalies.     
+P. Barford, J. Kline, D. Plonka, A. Ron. *A Signal Analysis of Network Traffic Anomalies* (ACM SIGCOMM Internet Measurement Workshop, 2002) - [pdf](https://web.eecs.umich.edu/~zmao/eecs589/papers/BarfordIMW02.pdf). The classic paper on using wavelet decomposition to expose short-lived traffic anomalies.     
 S. Mallat. *A Theory for Multiresolution Signal Decomposition: The Wavelet Representation* (IEEE Trans. PAMI, 1989) - [doi](https://doi.org/10.1109/34.192463). The foundational multiresolution analysis paper behind the Haar/DWT machinery.    
 I. Daubechies. *Ten Lectures on Wavelets* (SIAM, 1992) - [doi](https://doi.org/10.1137/1.9781611970104). The standard reference textbook for wavelet theory.    
 C.-M. Cheng, H. T. Kung, K.-S. Tan. *Use of Spectral Analysis in Defense Against DoS Attacks* (IEEE GLOBECOM, 2002) - [pdf](https://www.eecs.harvard.edu/~htk/publication/2002-globecom-cheng-kung-tan.pdf). Spectral/power-density view of DoS traffic, a close cousin of the wavelet approach.    
 
 **Low-rate and pulsing DDoS attacks**    
 
-A. Kuzmanovic, E. W. Knightly. *Low-Rate TCP-Targeted Denial of Service Attacks (The Shrew vs. the Mice and Elephants)* (ACM SIGCOMM, 2003) - [pdf](https://www.cs.northwestern.edu/~akuzma/doc/shrew.pdf). Explains exactly why low duty-cycle pulses evade average-based detectors while still hurting TCP.     
+A. Kuzmanovic, E. W. Knightly. *Low-Rate TCP-Targeted Denial of Service Attacks (The Shrew vs. the Mice and Elephants)* (ACM SIGCOMM, 2003) - [pdf](https://dl.acm.org/doi/10.1145/863955.863966). Explains exactly why low duty-cycle pulses evade average-based detectors while still hurting TCP.     
 
 **Change-point detection (onset detection)**     
 
 E. S. Page. *Continuous Inspection Schemes* (Biometrika, 1954) - [doi](https://doi.org/10.1093/biomet/41.1-2.100). The original CUSUM change-detection scheme.     
-G. V. Moustakides. *Optimal Stopping Times for Detecting Changes in Distributions* (Annals of Statistics, 1986) - [doi](https://doi.org/10.1214/aos/1176350051). Proves the minimax optimality of CUSUM for minimum-delay detection.    
-H. Wang, D. Zhang, K. G. Shin. *Detecting SYN Flooding Attacks* (IEEE INFOCOM, 2002) - [pdf](https://web.eecs.umich.edu/~kgshin/papers/infocom02.pdf). Non-parametric CUSUM applied to the SYN-FIN difference; directly relevant to SYN-flood detection.    
+G. V. Moustakides. *Optimal Stopping Times for Detecting Changes in Distributions* (Annals of Statistics, 1986) - [doi](https://www.ssp.ece.upatras.gr/moustakides/downloads/journals/seq1986.pdf). Proves the minimax optimality of CUSUM for minimum-delay detection.    
+H. Wang, D. Zhang, K. G. Shin. *Detecting SYN Flooding Attacks* (IEEE INFOCOM, 2002) - [pdf](https://www.cs.umd.edu/class/fall2023/cmsc614/papers/synflood.pdf). Non-parametric CUSUM applied to the SYN-FIN difference; directly relevant to SYN-flood detection.    
 
 **Entropy and statistical / distributional detection**     
 
