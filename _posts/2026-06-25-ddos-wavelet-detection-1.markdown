@@ -56,8 +56,8 @@ $$\bar{x}=pA$$
 
 where:    
 
-\(A\) is attack amplitude;    
-\(p\) is pulse duty cycle.    
+\\( A \\) is attack amplitude;    
+\\( p \\) is pulse duty cycle.    
 
 If:
 
@@ -75,7 +75,7 @@ $$a_i = \frac{x_{2i} + x_{2i+1}}{\sqrt{2}}$$
 
 $$d_i = \frac{x_{2i+1} - x_{2i}}{\sqrt{2}}$$
 
-The \(a_i\) value is an average-like component. The \(d_i\) value is a detail component.     
+The \\(a_i\\) value is an average-like component. The \\(d_i\\) value is a detail component.     
 
 In plain english:    
 
