@@ -634,8 +634,8 @@ H. Wang, D. Zhang, K. G. Shin. *Detecting SYN Flooding Attacks* (IEEE INFOCOM, 2
 **Entropy and statistical / distributional detection**     
 
 L. Feinstein, D. Schnackenberg, R. Balupari, D. Kindred. *Statistical Approaches to DDoS Attack Detection and Response* (DARPA DISCEX, 2003) - [doi](https://doi.org/10.1109/DISCEX.2003.1194894). Entropy and chi-square tests for volume-independent detection.     
-A. Lall, V. Sekar, M. Ogihara, J. Xu, H. Zhang. *Data Streaming Algorithms for Estimating Entropy of Network Traffic* (ACM SIGMETRICS, 2006) - [pdf](https://www.cc.gatech.edu/~jx/reprints/LSOXZ06.pdf). How to estimate traffic entropy at line rate with small memory.    
-A. Lakhina, M. Crovella, C. Diot. *Diagnosing Network-Wide Traffic Anomalies* (ACM SIGCOMM, 2004) - [pdf](https://www.cs.bu.edu/~crovella/paper-archive/sigc04-network-wide-anomalies.pdf). PCA subspace method for correlated, network-wide anomalies.     
+A. Lall, V. Sekar, M. Ogihara, J. Xu, H. Zhang. *Data Streaming Algorithms for Estimating Entropy of Network Traffic* (ACM SIGMETRICS, 2006) - [pdf](https://faculty.cc.gatech.edu/~jx/reprints/Sigm06entropy_talk.pdf). How to estimate traffic entropy at line rate with small memory.    
+A. Lakhina, M. Crovella, C. Diot. *Diagnosing Network-Wide Traffic Anomalies* (ACM SIGCOMM, 2004) - [pdf](https://conferences.sigcomm.org/sigcomm/2004/papers/p405-lakhina111.pdf). PCA subspace method for correlated, network-wide anomalies.     
 
 **Robust statistics (median / MAD / z-score)**
 
