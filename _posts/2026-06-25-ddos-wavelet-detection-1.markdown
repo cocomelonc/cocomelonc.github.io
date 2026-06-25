@@ -1,6 +1,6 @@
 ---
 title:  "Anti-DDoS research: detecting short traffic anomalies with Haar wavelets. Simple C example."
-date:   2026-06-24 02:00:00 +0300
+date:   2026-06-25 06:00:00 +0300
 header:
   teaser: "/assets/images/209/2026-06-25_11-53.png"
 categories:
@@ -655,9 +655,10 @@ W. E. Leland, M. S. Taqqu, W. Willinger, D. V. Wilson. *On the Self-Similar Natu
 J. Mirkovic, P. Reiher. *A Taxonomy of DDoS Attack and DDoS Defense Mechanisms* (ACM SIGCOMM CCR, 2004) - [doi](https://doi.org/10.1145/997150.997156). A good map of the whole attack/defense landscape.    
 I. Sharafaldin, A. H. Lashkari, S. Hakak, A. A. Ghorbani. *Developing Realistic Distributed Denial of Service (DDoS) Attack Dataset and Taxonomy* (IEEE ICCST, 2019) - [doi](https://doi.org/10.1109/CCST.2019.8888419). The paper behind the CICDDoS2019 dataset linked above.    
 
+[Haar wavelet](https://en.wikipedia.org/wiki/Haar_wavelet)    
 [source code in github](https://github.com/cocomelonc/meow/tree/master/2026-06-25-ddos-wavelet-detection-1)        
 
 > This is a practical defensive case for educational purposes only.
 
-Thanks for your time happy hacking and good bye!
+Thanks for your time happy hacking and good bye!    
 *PS. All drawings and screenshots are mine*
