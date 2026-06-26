@@ -1167,6 +1167,7 @@ I. Sharafaldin, A. H. Lashkari, S. Hakak, A. A. Ghorbani. *Developing Realistic 
 
 [Haar wavelet](https://en.wikipedia.org/wiki/Haar_wavelet)    
 [Daubechies wavelet](https://en.wikipedia.org/wiki/Daubechies_wavelet)    
+[Wavelet](https://en.wikipedia.org/wiki/Wavelet)    
 [source code in github](https://github.com/cocomelonc/meow/tree/master/2026-06-26-ddos-wavelet-detection-2)        
 
 > This is a practical defensive case for educational purposes only.
