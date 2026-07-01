@@ -24,7 +24,7 @@ In the previous Anti-DDoS posts I used wavelets for traffic anomaly detection. T
 
 The target is a classic L4 attack:
 
-> TCP SYN flood.
+**TCP SYN flood.**    
 
 No production architecture. No private telemetry. No attack tooling. Just defensive analysis on the public CICDDoS2019 `Syn.csv` file.
 
@@ -40,7 +40,7 @@ SYN packets/sec
 
 This is useful, but not enough as a general principle. The cybersecurity meaning of SYN flood is not just "many packets". It is:
 
-> many connection attempts without proportional handshake completion.
+**many connection attempts without proportional handshake completion.**    
 
 The TCP handshake is:
 
@@ -78,7 +78,7 @@ I use the real CICDDoS2019 file:
 
 As you can see, this file is large:
 
-```text
+```bash
 1.8 GB
 ```
 
@@ -142,15 +142,15 @@ $$R_t = \frac{F_t + 1}{B_t + 1}$$
 
 where:     
 
-\(F_t\) is forward packets/sec;     
-\(B_t\) is backward packets/sec;     
+\\(F_t\\) is forward packets/sec;     
+\\(B_t\\) is backward packets/sec;     
 `+1` prevents division by zero.    
 
 Then define one-way flow ratio:    
 
 $$O_t = \frac{W_t}{flows_t}$$
 
-where \(W_t\) is the number of flows with no backward packets.      
+where \\(W_t\\) is the number of flows with no backward packets.      
 
 If `flows_t = 0`, we set:     
 
@@ -165,9 +165,9 @@ $$
 
 Why this form?     
 
-1. \(flows_t\) keeps attack volume.
-2. \(\log(1+R_t)\) adds directional imbalance but avoids exploding too much.
-3. \((1+O_t)\) increases score when many flows have no backward side.
+1. \\(flows_t\\) keeps attack volume.
+2. \\(\log(1+R_t)\\) adds directional imbalance but avoids exploding too much.
+3. \\((1+O_t)\\) increases score when many flows have no backward side.
 
 This is still simple enough to compute in C.     
 
@@ -175,7 +175,7 @@ This is still simple enough to compute in C.
 
 Raw values are not enough. We need to compare current values to benign baseline.     
 
-For any feature \(X_t\), robust z-score is:      
+For any feature \\(X_t\\), robust z-score is:      
 
 $$
 Z_t =
@@ -793,7 +793,7 @@ $$
 FP_{volume}=FP_{asym}=0
 $$
 
-At the same threshold \(z=8\), handshake asymmetry detects 3 more campaigns without increasing false positives.     
+At the same threshold \\(z=8\\), handshake asymmetry detects 3 more campaigns without increasing false positives.     
 
 Threshold scan proof:      
 
@@ -864,6 +864,8 @@ asymmetry:  TP=11 FP=0 FN=1
 
 This is a practical defensive building block for Anti-DDoS research.       
 
+H. Wang, D. Zhang, K. G. Shin. *Detecting SYN Flooding Attacks* (IEEE INFOCOM, 2002) - [pdf](https://www.cs.umd.edu/class/fall2023/cmsc614/papers/synflood.pdf). Non-parametric CUSUM applied to the SYN-FIN difference; directly relevant to SYN-flood detection.    
+
 [DDoS2019 Dataset: Canadian Institute for Cybersecurity](https://www.unb.ca/cic/datasets/ddos-2019.html)     
 [CICDoS2019 Dataset: Telegram channel](https://t.me/maldevcc/224)    
 [source code in github](https://github.com/cocomelonc/meow/tree/master/2026-07-01-ddos-syn-flood-detection-1)        
@@ -871,6 +873,4 @@ This is a practical defensive building block for Anti-DDoS research.
 > This is a practical defensive case for educational purposes only.
 
 Thanks for your time happy hacking and good bye!    
-*PS. All drawings and screenshots are mine*   
-
-
+*PS. All drawings and screenshots are mine*    
