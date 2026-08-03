@@ -8,6 +8,7 @@ author_profile: true
 ![conferences](/assets/images/conferences.jpg){:class="img-responsive"}      
 
 ### 2026
+[DEFCON 34: Adversary Village - Malware Development for Ethical Hackers workshop](https://adversaryvillage.org/adversary-events/DEFCON-34/Zhassulan-Zhussupov/)     
 [BSides Prishtina 2026 - Signal processing and math for malware RnD for fun and profit](https://sessionize.com/s/zhassulan-zhussupov/signal-processing-and-math-for-malware-rd-for-fun-/169581)     
 [Bsides Luxembourg 2026 - AI and Cryptography for Evasive Malware](https://pretalx.com/bsidesluxembourg-2026/talk/Q7CEUD/)    
 [DEFCON Singapore 2026 Demo Labs - peekaboo](https://defcon.org/html/defcon-singapore/dc-singapore-demolabs.html)     
@@ -17,6 +18,7 @@ author_profile: true
 ### 2025
 
 PHTalks Sao Paolo 2025 - Malware and Hunting for Persistence 2025: how adversaries hack your Windows?     
+[DEFCON Bahrain 2026 Demo Labs - peekaboo](https://defcon.org)    
 [Hack.lu 2025 - Exploiting legit APIs for Covert C2: A New Perspective On Cloud-based Malware Operations](https://www.youtube.com/watch?v=l2G2TZvzj0E)     
 [MCTTP Munich Cyber Tactics, Techniques und Procedures 2025 - Deanon Hackers via Public Leaks: Tracking APT Groups using Leaks](https://youtu.be/GEcrfdayfQA?si=cvJUV-QmrqEjeIMe)       
 Security BSides Ahmedabad 2025 - Deanon Hackers via Public Leaks: Tracking APT Groups using Leaks     
