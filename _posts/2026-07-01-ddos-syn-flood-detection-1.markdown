@@ -644,7 +644,7 @@ volume detector:              TP=8  FP=0 FN=4
 handshake asymmetry detector: TP=11 FP=0 FN=1
 ```
 
-At the same threshold \(z=8\), both detectors have zero false positives at campaign level. But handshake asymmetry detects more SYN campaigns.     
+At the same threshold \\(z=8\\), both detectors have zero false positives at campaign level. But handshake asymmetry detects more SYN campaigns.     
 
 ### campaign-level events
 
