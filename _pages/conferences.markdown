@@ -8,6 +8,8 @@ author_profile: true
 ![conferences](/assets/images/conferences.jpg){:class="img-responsive"}      
 
 ### 2026
+
+[DEFCON 34: Demo Labs - peekaboo](https://defcon.org/html/defcon-34/dc-34-demolabs.html)     
 [DEFCON 34: Adversary Village - Malware Development for Ethical Hackers workshop](https://adversaryvillage.org/adversary-events/DEFCON-34/Zhassulan-Zhussupov/)     
 [BSides Prishtina 2026 - Signal processing and math for malware RnD for fun and profit](https://sessionize.com/s/zhassulan-zhussupov/signal-processing-and-math-for-malware-rd-for-fun-/169581)     
 [Bsides Luxembourg 2026 - AI and Cryptography for Evasive Malware](https://pretalx.com/bsidesluxembourg-2026/talk/Q7CEUD/)    
