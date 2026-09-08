@@ -85,7 +85,7 @@ This is label entropy. Source-IP entropy measures a different random variable an
 
 ### conditional information gain
 
-A question is $Q_{j,t}(x)=\mathbf{1}[x_j\leq t]$. Here $j$ selects a feature and $t$ is a threshold. Let $S$ denote the observations on the path so far.
+A question is \\(Q_{j,t}(x)=\mathbf{1}[x_j\leq t]\\). Here \\(j\\) selects a feature and \\(t\\) is a threshold. Let \\(S\\) denote the observations on the path so far.     
 
 *In plain english: a question is something like "is `Total Length of Bwd Packets` ≤ 85?" - every row answers yes or no, and the two answers become the tree's two branches.*
 
@@ -343,7 +343,7 @@ At depth 4, the held-out files reveal the variation:
 | UDP.csv | 7 | 0 | 0 |
 | UDPLag.csv | 62 | 22 | 3 |
 
-Here is the actual depth-two tree with LDAP.csv held out. Class 0 is benign; class 1 is attack:
+Here is the actual depth-two tree with `LDAP.csv` held out. Class 0 is benign; class 1 is attack:
 
 ![ddos](/assets/images/223/2026-09-07_21-56.png){:class="img-responsive"}    
 
