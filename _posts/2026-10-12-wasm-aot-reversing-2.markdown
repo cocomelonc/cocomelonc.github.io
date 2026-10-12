@@ -1,6 +1,6 @@
 ---
 title:  "Reversing embedded WebAssembly: part 2. Recovering function names from a WAMR .aot in pure C."
-date:   2026-10-14 04:00:00 +0200
+date:   2026-10-12 04:00:00 +0200
 header:
   teaser: "/assets/images/228/2026-10-11_15-34.png"
 categories:
@@ -516,7 +516,7 @@ I hope this post is useful for reverse engineers, embedded and IoT security rese
 [WAMR AOT compiler (wamrc) and prebuilt releases](https://github.com/bytecodealliance/wasm-micro-runtime/releases)    
 [reversing embedded WebAssembly: part 1](/reverse/2026/09/30/wasm-aot-reversing-1.html)   
 [WebAssembly core specification](https://webassembly.github.io/spec/core/)   
-[source code in github - part 2](https://github.com/cocomelonc/meow/tree/master/2026-10-14-wasm-aot-reversing-2)    
+[source code in github - part 2](https://github.com/cocomelonc/meow/tree/master/2026-10-12-wasm-aot-reversing-2)    
 
 > This is a practical case for educational purposes only.
 
