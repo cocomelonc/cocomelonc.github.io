@@ -86,7 +86,9 @@ Charity fund +1 from Kazakhstan (Kaspi QR):
 
 If you are unable to pay for it, I will send it to you for free.    
 
-[MALWILD book](https://t.me/maldevcc/10)    
+[MALWILD book](https://t.me/maldevcc/10)
+
+[download pdf (github)](https://github.com/cocomelonc/cocomelonc.github.io/releases/download/books/malwild.pdf)    
 
 > All examples are practical cases for educational purposes only.         
 

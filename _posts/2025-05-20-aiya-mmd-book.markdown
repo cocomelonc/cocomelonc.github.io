@@ -79,7 +79,9 @@ Binance email: [zhzhussupovkz@gmail.com](mailto:zhzhussupovkz@gmail.com)
 
 If you are unable to pay for it, I will send it to you for free.    
 
-[Book](https://github.com/cocomelonc/aiya_mmd_book/blob/main/aiya-mmd-book.pdf)     
+[Book](https://github.com/cocomelonc/aiya_mmd_book/blob/main/aiya-mmd-book.pdf)
+
+[download pdf (github)](https://github.com/cocomelonc/cocomelonc.github.io/releases/download/books/aiya-mmd-book.pdf)     
 
 [MD MZ book 2nd edition](https://t.me/maldevcc/5)     
 [MD MZ book 2nd edition: My Telegram channel](https://t.me/maldevcc/5)      
