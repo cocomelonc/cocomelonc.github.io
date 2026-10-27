@@ -2,7 +2,7 @@
 title: "Linux hacking part 12: LD_PRELOAD function interposition. Simple C examples"
 date:  2026-10-26 02:00:00 +0200
 header:
-  teaser: "/assets/images/230/2026-10-27_01-21.png"
+  teaser: "/assets/images/230/2026-10-27_10-07.png"
 categories:
   - linux
 tags:
@@ -17,7 +17,7 @@ tags:
 
 Hello, cybersecurity enthusiasts and white hackers!    
 
-![linux](/assets/images/230/2026-10-27_01-21.png){:class="img-responsive"}    
+![linux](/assets/images/230/2026-10-27_10-07.png){:class="img-responsive"}    
 
 In the [previous part](/linux/2026/06/17/linux-hacking-11.html), we looked at redirecting a function call through the GOT/PLT. This time, let's return to `LD_PRELOAD` and look more closely at function interposition: a shared library can provide a function with the same name as one used by a dynamically linked program.    
 
@@ -247,7 +247,9 @@ getdents64(3, 0x555a736fb2d0 /* 0 entries */, 32768) = 0
 
 The first call fills the libc buffer with every entry in our small directory at once (`.`, `..`, `meow.txt`, `notes.txt`), which is why all four `[audit]` lines come from a single system call. The second call returns `0 entries`, and that empty result is how the C library detects the end of the directory: at that point `readdir()` returns `NULL` and our loop stops. A larger directory would simply trigger more `getdents64()` calls before the final empty one.
 
-This gives us a useful defensive check: if a program's directory listing disagrees with the entries returned by the kernel, investigate which library code and process environment shaped the result. A mismatch alone is not proof of a rootkit; applications can filter or transform data for legitimate reasons too.
+This gives us a useful defensive check: if a program's directory listing disagrees with the entries returned by the kernel, investigate which library code and process environment shaped the result. A mismatch alone is not proof of a rootkit; applications can filter or transform data for legitimate reasons too.      
+
+![linux](/assets/images/230/2026-10-27_01-21.png){:class="img-responsive"}    
 
 ### practical example 3
 
@@ -395,6 +397,60 @@ diff with_file.txt without_file.txt
 ![linux](/assets/images/230/2026-10-27_01-19.png){:class="img-responsive"}     
 
 This is exactly the discrepancy the defensive check from demo 2 looks for: the user-space view and the kernel view disagree, and the difference points straight at the preloaded library. The file is still on disk, still returned by the system call, and still visible to any process that does not load `hide.so`.
+
+### practical example 4
+
+Until now we interposed our own program, `meow`. But nothing about `hide.so` is specific to `meow`: it exports `readdir()`, and every dynamically linked program that lists a directory through the C library goes through that same symbol. That includes the real system tools. Let's point the same library at `ls`:
+
+```bash
+LD_PRELOAD="$PWD/hide.so" ls -la ./lab
+```
+
+`ls` is not our code, we did not recompile it, and we did not patch it on disk. Yet `secret_passwords.txt` is missing from its output, while a plain `ls -la ./lab` still shows the file. The same happens with `find`, `cat *`, a file manager, or any other dynamically linked consumer of `readdir()`:
+
+```bash
+# the file is visible here
+ls -la ./lab
+
+# ...and hidden here, same binary, same directory
+LD_PRELOAD="$PWD/hide.so" ls -la ./lab
+```
+
+![linux](/assets/images/230/2026-10-27_04-00.png){:class="img-responsive"}    
+
+This is the real payoff of symbol interposition: a single small library changes what trusted, unmodified tools report. It is worth being precise about the limits, though. This only affects programs that actually resolve `readdir()` through the dynamic linker. A statically linked `ls` (for example from `busybox`), or a tool that reads directories through the `getdents64()` system call directly, is unaffected, because there is no library symbol to interpose.     
+
+### practical example 5
+
+So far the hook only applies to commands we launch ourselves with the `LD_PRELOAD` environment variable. The loader also reads a file, `/etc/ld.so.preload`, and preloads every library listed there into *every* dynamically linked process started on the system, with no environment variable required. This is the mechanism real `LD_PRELOAD` rootkits use to make their hook persistent and system-wide.    
+
+> **Run this step in a throwaway virtual machine, never on your host.** `/etc/ld.so.preload` affects *every* dynamically linked process. A wrong path, a typo, or a library that crashes on load can break `sudo`, your shell, and nearly every command at once, leaving the system hard to recover. Take a VM snapshot first so you can roll back.
+
+```bash
+# writing this path requires root
+echo "$PWD/hide.so" | sudo tee /etc/ld.so.preload
+```
+
+![linux](/assets/images/230/2026-10-27_10-02.png){:class="img-responsive"}    
+
+With that single line in place, every new dynamically linked process inherits the `readdir()` wrapper, so `ls`, `find`, and a file manager all hide `secret_passwords.txt` without any per-command environment variable. See [`ld.so(8)`](https://man7.org/linux/man-pages/man8/ld.so.8.html) for the exact precedence and the secure-execution rules.
+
+![linux](/assets/images/230/2026-10-27_10-03.png){:class="img-responsive"}    
+
+Remove it as soon as you are done, so you do not leave a system-wide hook in place:
+
+```bash
+sudo rm -f /etc/ld.so.preload
+```
+
+For a defender this file is a high-value artifact. Because it is empty or absent on a normal system, its mere existence is suspicious, which is why incident-response and forensic checklists inspect it early:
+
+```bash
+# on a clean system this prints nothing or "No such file"
+cat /etc/ld.so.preload
+```
+
+![linux](/assets/images/230/2026-10-27_10-05.png){:class="img-responsive"}    
 
 ### why this matters
 
