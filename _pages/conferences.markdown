@@ -9,6 +9,7 @@ author_profile: true
 
 ### 2026
 
+[HACK.LU 2026: Signal processing and math for malware RnD for fun and profit](https://www.youtube.com/watch?v=pFlA59w3C_Y)    
 [MCTTP 2026: Revenge AI and NSO-Generation Mobile Spyware Architecture](https://www.mcttp.de/speaker-2026)    
 [DEFCON 34: Demo Labs - peekaboo](https://defcon.org/html/defcon-34/dc-34-demolabs.html)     
 [DEFCON 34: Adversary Village - Malware Development for Ethical Hackers workshop](https://adversaryvillage.org/adversary-events/DEFCON-34/Zhassulan-Zhussupov/)     
