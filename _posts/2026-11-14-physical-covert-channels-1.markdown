@@ -636,7 +636,7 @@ After CRC validation, the receiver compares the payload with MEOW. That ID calls
 
 The fixed handler uses the Linux x86-64 write system call:
 
-```asm
+```nasm
 /*
  * meow.S - fixed Linux x86-64 payload action
  * author: @cocomelonc
