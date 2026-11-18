@@ -70,90 +70,98 @@ The full phone screen stays at gray `128` while idle and during the guards. Duri
 
 First of all, we need some theoretical fundament. In the simple terms, the Android app changes the gray code across the screen. The phone display and ThinkPad camera transform it before the receiver sees a sample.     
 
-Let the transmitted gray code be \(u(t)\in\{80,128,176\}\). The display maps it to emitted luminance \(L(t)=F(u(t))\), where \(F\) models the panel's static transfer curve, current brightness and color processing. For frame \(k\), the camera's ROI value can be approximated as
+Let the transmitted gray code be $$u(t)\in\{80,128,176\}$$. The display maps it to emitted luminance $$L(t)=F(u(t))$$, where $$F$$ models the panel's static transfer curve, current brightness and color processing. For frame $$k$$, the camera's ROI value can be approximated as
 
 $$
-y_k = Q\!\left( a_k + g_k \frac{1}{T_e}\int_{t_k}^{t_k+T_e} L(\tau)\,d\tau + n_k \right).
+\begin{aligned}
+y_k = Q\!\Biggl(&a_k + g_k \frac{1}{T_e}\int_{t_k}^{t_k+T_e} L(\tau)\,d\tau \\
+                &{}+ n_k \Biggr).
+\end{aligned}
 $$
 
-Here \(T_e\) is exposure time, \(t_k\) is the exposure start, \(g_k\) is camera gain, \(a_k\) is offset, \(n_k\) represents sensor and image-processing noise, and \(Q\) includes quantization and video encoding. Rolling shutter makes \(t_k\) vary with image row; choosing a small ROI near the center of the phone screen limits, but does not eliminate, this effect. The grayscale bytes produced by FFmpeg are the \(y_k\) used by `receiver.c`.
+Here $$T_e$$ is exposure time, $$t_k$$ is the exposure start, $$g_k$$ is camera gain, $$a_k$$ is offset, $$n_k$$ represents sensor and image-processing noise, and $$Q$$ includes quantization and video encoding. Rolling shutter makes $$t_k$$ vary with image row; choosing a small ROI near the center of the phone screen limits, but does not eliminate, this effect. The grayscale bytes produced by FFmpeg are the $$y_k$$ used by `receiver.c`.
 
 #### Manchester mapping
 
-Let a bit be \(b_i\in\{0,1\}\), a bit period be \(T_b=0.5\,\mathrm{s}\), and a half-bit period be \(T_h=T_b/2=0.25\,\mathrm{s}\). Define the light state \(m(t)\in\{0,1\}\), with gray levels \(G_L=80\) and \(G_H=176\). For time \(\tau\in[0,T_b)\) within the bit:
+Let a bit be $$b_i\in\{0,1\}$$, a bit period be $$T_b=0.5\,\mathrm{s}$$, and a half-bit period be $$T_h=T_b/2=0.25\,\mathrm{s}$$. Define the light state $$m(t)\in\{0,1\}$$, with gray levels $$G_L=80$$ and $$G_H=176$$. For time $$\tau\in[0,T_b)$$ within the bit:
 
 $$
-m_i(\tau)=\begin{cases}
+\begin{aligned}
+m_i(\tau)&=\begin{cases}
 b_i, & 0\leq\tau<T_h,\\
 1-b_i, & T_h\leq\tau<T_b,
-\end{cases}
-\qquad
-u_i(\tau)=G_L+(G_H-G_L)m_i(\tau).
+\end{cases} \\[0.4em]
+u_i(\tau)&=G_L+(G_H-G_L)m_i(\tau).
+\end{aligned}
 $$
 
-Thus bit `0` is dark then light; bit `1` is light then dark. This is exactly the decision in `grayAt()` in `OpticalActivity.java`: `value` is \(b_i\), and the light state is \(b_i\) for the first half and \(1-b_i\) for the second.
+Thus bit `0` is dark then light; bit `1` is light then dark. This is exactly the decision in `grayAt()` in `OpticalActivity.java`: `value` is $$b_i$$, and the light state is $$b_i$$ for the first half and $$1-b_i$$ for the second.
 
 Manchester coding is DC balanced over a complete bit. In the code domain:
 
 $$
-\frac{1}{T_b}\int_0^{T_b}m_i(\tau)\,d\tau=\frac12,
-\qquad
-\frac{1}{T_b}\int_0^{T_b}u_i(\tau)\,d\tau=\frac{G_L+G_H}{2}=128.
+\begin{aligned}
+\frac{1}{T_b}\int_0^{T_b}m_i(\tau)\,d\tau&=\frac12, \\[0.4em]
+\frac{1}{T_b}\int_0^{T_b}u_i(\tau)\,d\tau&=\frac{G_L+G_H}{2}=128.
+\end{aligned}
 $$
 
-The two bit values have the same average code value; the information is in the direction of the transition. Under a static display transfer function, both bit values also spend equal time at each emitted level, so their ideal average emitted luminance is \(\left(F(G_L)+F(G_H)\right)/2\), even if \(F\) is nonlinear. This can reduce sensitivity to a constant offset, but does not remove gain changes, exposure adaptation, clipping, display response or frame loss.
+The two bit values have the same average code value; the information is in the direction of the transition. Under a static display transfer function, both bit values also spend equal time at each emitted level, so their ideal average emitted luminance is $$\left(F(G_L)+F(G_H)\right)/2$$, even if $$F$$ is nonlinear. This can reduce sensitivity to a constant offset, but does not remove gain changes, exposure adaptation, clipping, display response or frame loss.
 
 #### when the Manchester decision is correct
 
-Assume the receiver has found the correct frame phase and half-bit duration, and its two central windows lie inside their corresponding transmitted halves. Let their noiseless measured means be \(\mu_0\) and \(\mu_1\), with \(\Delta=\mu_H-\mu_L>0\). The differential statistic is
+Assume the receiver has found the correct frame phase and half-bit duration, and its two central windows lie inside their corresponding transmitted halves. Let their noiseless measured means be $$\mu_0$$ and $$\mu_1$$, with $$\Delta=\mu_H-\mu_L>0$$. The differential statistic is
 
 $$
 D_i=\bar y_{i,0}-\bar y_{i,1}.
 $$
 
-Under the mapping above, \(D_i=+\Delta\) for bit `1`, and \(D_i=-\Delta\) for bit `0`. Therefore the sign of \(D_i\) recovers the bit exactly when the two means remain ordered. In the code, `means[0] > means[1]` returns `1`.
+Under the mapping above, $$D_i=+\Delta$$ for bit `1`, and $$D_i=-\Delta$$ for bit `0`. Therefore the sign of $$D_i$$ recovers the bit exactly when the two means remain ordered. In the code, `means[0] > means[1]` returns `1`.
 
-Now suppose the average error in each half-window is bounded by \(\eta\): \(|\bar y_{i,j}-\mu_{i,j}|\leq\eta\). For bit one, write the observed means as \(\bar y_{i,0}=\mu_H+\epsilon_0\) and \(\bar y_{i,1}=\mu_L+\epsilon_1\), where \(|\epsilon_0|,|\epsilon_1|\leq\eta\). Then
+Now suppose the average error in each half-window is bounded by $$\eta$$: $$\lvert \bar y_{i,j}-\mu_{i,j} \rvert\leq\eta$$. For bit one, write the observed means as $$\bar y_{i,0}=\mu_H+\epsilon_0$$ and $$\bar y_{i,1}=\mu_L+\epsilon_1$$, where $$\lvert \epsilon_0 \rvert,\lvert \epsilon_1 \rvert\leq\eta$$. Then
 
 $$
 D_i=\Delta+\epsilon_0-\epsilon_1\geq\Delta-2\eta.
 $$
 
-For bit zero, \(D_i\leq-\Delta+2\eta\). Thus \(\Delta>2\eta\) preserves the sign in either case. The implementation also rejects pairs whose differential magnitude is below 6 gray levels. A sufficient condition for both the correct sign and this threshold is
+For bit zero, $$D_i\leq-\Delta+2\eta$$. Thus $$\Delta>2\eta$$ preserves the sign in either case. The implementation also rejects pairs whose differential magnitude is below 6 gray levels. A sufficient condition for both the correct sign and this threshold is
 
 $$
 \Delta>6+2\eta.
 $$
 
-This is a conditional correctness result for the Manchester decision. Honestly, it does not prove that a particular camera produces this contrast; \(\Delta\) and \(\eta\) must be measured from its actual recording. The implementation averages the central 60% of each half, matching the `0.2` and `0.8` bounds in `byte_at()`.
+This is a conditional correctness result for the Manchester decision. Honestly, it does not prove that a particular camera produces this contrast; $$\Delta$$ and $$\eta$$ must be measured from its actual recording. The implementation averages the central 60% of each half, matching the `0.2` and `0.8` bounds in `byte_at()`.
 
 #### timing and exposure condition
 
-The camera's normalized sample stream is nominally \(f_s=30\) samples/s. Each half-bit therefore spans
+The camera's normalized sample stream is nominally $$f_s=30$$ samples/s. Each half-bit therefore spans
 
 $$
 N_h=f_sT_h=30\cdot0.25=7.5\text{ samples}.
 $$
 
-The receiver searches \(\widehat N_h\) from `7.15` through `7.85` samples, stepping by `0.01`; `start` searches the phase in integer sample steps. If the true half duration is outside that range, or the capture contains a large timing discontinuity, this implementation can miss the frame.
+The receiver searches $$\widehat N_h$$ from `7.15` through `7.85` samples, stepping by `0.01`; `start` searches the phase in integer sample steps. If the true half duration is outside that range, or the capture contains a large timing discontinuity, this implementation can miss the frame.
 
-For the central `60%` mean to avoid transitions, a sufficient timing condition for half \(j\) is
+For the central `60%` mean to avoid transitions, a sufficient timing condition for half $$j$$ is
 
 $$
 |e_j|+\frac{T_e}{2}+T_r+T_d < 0.2T_h,
 $$
 
-where \(e_j\) is the sample-center timing error, \(T_e\) is exposure duration, \(T_r\) bounds display rise/fall smearing, and \(T_d\) is timing uncertainty from capture and frame-rate conversion. It includes up to half a normalized sample (about `16.7 ms`) from the receiver's integer-sample phase search, plus any additional resampling or timestamp error. The right-hand side is `50 ms` here. This bound assumes a stable ROI, no clipping, and a bounded transition response; the current program does not read camera exposure or row timestamps and does not verify the inequality. It only searches a limited constant-rate timing range.
+where $$e_j$$ is the sample-center timing error, $$T_e$$ is exposure duration, $$T_r$$ bounds display rise/fall smearing, and $$T_d$$ is timing uncertainty from capture and frame-rate conversion. It includes up to half a normalized sample (about `16.7 ms`) from the receiver's integer-sample phase search, plus any additional resampling or timestamp error. The right-hand side is `50 ms` here. This bound assumes a stable ROI, no clipping, and a bounded transition response; the current program does not read camera exposure or row timestamps and does not verify the inequality. It only searches a limited constant-rate timing range.
 
 #### frame length, rate and error check
 
-For payload length \(L\) bytes, the frame has \(N=L+9\) bytes: six preamble/sync bytes, one length byte, \(L\) data bytes and two CRC bytes. The frame has \(8N\) bits and \(16N\) half-bits. Since each half takes \(T_h\), the total duration including guards is
+For payload length $$L$$ bytes, the frame has $$N=L+9$$ bytes: six preamble/sync bytes, one length byte, $$L$$ data bytes and two CRC bytes. The frame has $$8N$$ bits and $$16N$$ half-bits. Since each half takes $$T_h$$, the total duration including guards is
 
 $$
-T_{\mathrm{total}}=5\,\mathrm{s}+16(L+9)T_h+2\,\mathrm{s}=7+4(L+9)\,\mathrm{s}.
+\begin{aligned}
+T_{\mathrm{total}}&=5\,\mathrm{s}+16(L+9)T_h+2\,\mathrm{s} \\
+                  &=\bigl[7+4(L+9)\bigr]\,\mathrm{s}.
+\end{aligned}
 $$
 
-For `MEOW`, \(L=4\), so \(T_{\mathrm{total}}=59\,\mathrm{s}\). For `Meow-meow!`, \(L=10\), so \(T_{\mathrm{total}}=83\,\mathrm{s}\). The useful payload rate is
+For `MEOW`, $$L=4$$, so $$T_{\mathrm{total}}=59\,\mathrm{s}$$. For `Meow-meow!`, $$L=10$$, so $$T_{\mathrm{total}}=83\,\mathrm{s}$$. The useful payload rate is
 
 $$
 R_{\mathrm{useful}}=\frac{8L}{T_{\mathrm{total}}}\quad\text{bits/s},
@@ -161,9 +169,9 @@ $$
 
 or about `0.54 bits/s` for `MEOW` and `0.96 bits/s` for `Meow-meow!`. The raw Manchester bit rate is `2 bits/s`; framing and guards lower the useful rate.
 
-CRC-16/CCITT-FALSE uses generator polynomial \(x^{16}+x^{12}+x^5+1\), initial remainder `0xffff`, and no reflection or final XOR. The implementation covers the length byte and payload. The receiver rejects a frame when the computed and received CRCs differ; CRC does not correct errors or authenticate the sender. The standard check value for ASCII `123456789` is `0x29b1`, a useful independent check of the CRC routine.
+CRC-16/CCITT-FALSE uses generator polynomial $$x^{16}+x^{12}+x^5+1$$, initial remainder `0xffff`, and no reflection or final XOR. The implementation covers the length byte and payload. The receiver rejects a frame when the computed and received CRCs differ; CRC does not correct errors or authenticate the sender. The standard check value for ASCII `123456789` is `0x29b1`, a useful independent check of the CRC routine.
 
-In polynomial terms, an error pattern \(E(x)\) goes undetected only if \(g(x)\) divides it. Since \(g\) has degree `16`, every nonzero burst error of length at most `16` bits is detected; longer error patterns can still be divisible by \(g\). This is error detection, not correction or authentication.
+In polynomial terms, an error pattern $$E(x)$$ goes undetected only if $$g(x)$$ divides it. Since $$g$$ has degree `16`, every nonzero burst error of length at most `16` bits is detected; longer error patterns can still be divisible by $$g$$. This is error detection, not correction or authentication.
 
 The inequalities define the contrast and timing conditions used by the decoder. The synthetic trace meets them by construction. Next I will check them against a recording from the ThinkPad camera.
 
@@ -179,24 +187,25 @@ $$
 \Delta = \mu_{\mathrm{light}} - \mu_{\mathrm{dark}}.
 $$
 
-The decoder needs the contrast and timing bounds derived above. In particular, \(\Delta > 6 + 2\eta\) requires \(\eta\) to bound the error in each half-bit window; a sample standard deviation describes observed spread but is not, by itself, that bound.
+The decoder needs the contrast and timing bounds derived above. In particular, $$\Delta > 6 + 2\eta$$ requires $$\eta$$ to bound the error in each half-bit window; a sample standard deviation describes observed spread but is not, by itself, that bound.
 
-For repeated transmissions, I count \(x\) frames whose CRC passes and whose recovered text matches the sent text, out of \(n\) attempts. The observed packet success fraction is
+For repeated transmissions, I count $$x$$ frames whose CRC passes and whose recovered text matches the sent text, out of $$n$$ attempts. The observed packet success fraction is
 
 $$
 \hat p = \frac{x}{n}.
 $$
 
-To show the uncertainty in that fraction, I use the 95% Wilson interval. With \(z=1.96\), its center \(c\) and half-width \(h\) are
+To show the uncertainty in that fraction, I use the 95% Wilson interval. With $$z=1.96$$, its center $$c$$ and half-width $$h$$ are
 
 $$
-c=\frac{\hat p+z^2/(2n)}{1+z^2/n},
-\qquad
-h=\frac{z}{1+z^2/n}
+\begin{aligned}
+c&=\frac{\hat p+z^2/(2n)}{1+z^2/n}, \\[0.4em]
+h&=\frac{z}{1+z^2/n}
 \sqrt{\frac{\hat p(1-\hat p)}{n}+\frac{z^2}{4n^2}}.
+\end{aligned}
 $$
 
-The interval is \([c-h,c+h]\). This gives a confidence range for the packet success fraction across repeated runs; one successful frame only confirms that single capture.
+The interval is $$[c-h,c+h]$$. This gives a confidence range for the packet success fraction across repeated runs; one successful frame only confirms that single capture.
 
 Bit-error rate needs individual bit decisions:
 
