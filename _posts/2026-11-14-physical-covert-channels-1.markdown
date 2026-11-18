@@ -1010,5 +1010,7 @@ Of course, I'm not the first one to come up with this; similar concepts are desc
 [FFmpeg filter documentation](https://ffmpeg.org/ffmpeg-filters.html)    
 [source code in github](https://github.com/cocomelonc/optical-malware-delivery-poc)     
 
+> This is a practical case for educational purposes only.
+
 Thanks for your time happy hacking and good bye!     
 *PS. All drawings and screenshots are mine*
