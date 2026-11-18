@@ -24,7 +24,7 @@ In my [previous DSP research](/malware/2026/05/25/malware-tricks-56.html), we en
 
 As usual, let's imagine that the Android app uses no permissions and makes no network connection. The receiver gets the video from the ThinkPad camera, FFmpeg extracts grayscale samples, and the C program validates the frame's CRC before calling the fixed handler. The received bytes are a four-byte identifier; the receiver does not execute them as machine code yet.      
 
-The synthetic trace, generated MP4 and Moto G54 screenrecord decode `MEOW` and print `Meow-meow!`. I have not recorded the phone with the ThinkPad camera yet; I do that next in Demo 2.     
+The synthetic trace, generated MP4 and Moto G54 screenrecord decode `MEOW` and print `Meow-meow!`. I also completed the physical Android-screen-to-ThinkPad-camera run in Demo 2: the C receiver recovered `MEOW`, validated CRC `0x0ead`, and printed `Meow-meow!`.     
 
 ### the channel and concept
 
@@ -173,13 +173,13 @@ CRC-16/CCITT-FALSE uses generator polynomial $$x^{16}+x^{12}+x^5+1$$, initial re
 
 In polynomial terms, an error pattern $$E(x)$$ goes undetected only if $$g(x)$$ divides it. Since $$g$$ has degree `16`, every nonzero burst error of length at most `16` bits is detected; longer error patterns can still be divisible by $$g$$. This is error detection, not correction or authentication.
 
-The inequalities define the contrast and timing conditions used by the decoder. The synthetic trace meets them by construction. Next I will check them against a recording from the ThinkPad camera.
+The inequalities define the contrast and timing conditions used by the decoder. The synthetic trace meets them by construction. The ThinkPad camera recording in Demo 2 recovered the frame; it is one successful capture, not a reliability estimate.
 
 #### screenrecord check before camera
 
 I first ran the current APK on the Moto G54 and recorded the phone with Android `screenrecord`. After cropping the gray signal patch, FFmpeg produced `2,033` grayscale samples. The C receiver found `MEOW`, verified CRC `0x0ead`, estimated the frame start at `11.87` s and the half-bit duration at `0.2490` s, then printed `Meow-meow!`. This confirms the sender and decoder work together in a digital capture; the ThinkPad camera did not record this signal.    
 
-Now I move to the optical path. I start the ThinkPad camera, tap **Meow! ♥️**, crop only the gray patch from the video, and feed those samples to the same receiver. I check a still frame first so the crop excludes the cat, plot and text. If the receiver rejects the frame, I check the crop and recording timing, adjust the camera view, and repeat. The capture steps are below.
+The screenrecord confirms the sender and decoder in a digital capture. The separate ThinkPad camera run below confirms the physical optical path: the receiver found the frame at `7.87` s, estimated a `0.2490` s half-bit, validated CRC `0x0ead`, and printed `Meow-meow!`. I keep the camera crop on the gray patch and the phone still during transmission.
 
 For each camera run, I keep the sent text, original video, camera mode and frame rate, exposure, phone distance and angle, screen brightness, crop, and receiver output together. I calculate the light/dark contrast from the cropped samples as
 
@@ -946,7 +946,7 @@ for my Thinkpad X1 Carbon:
 
 ![malware](/assets/images/235/2026-11-18_19-11.png){:class="img-responsive"}   
 
-While FFmpeg is recording, open ReconCat Optical on Android, aim the ThinkPad camera at the phone screen, and tap the screen. Keep the phone centered and still until the app reports that the frame was sent. The app sends one `59`-second frame; the longer capture leaves room for starting and stopping the run.
+While FFmpeg is recording, we need to open ReconCat Optical on Android, aim the ThinkPad camera at the phone screen, and tap **Meow! ♥️** button on the screen. Keep the phone centered and still until the app reports that the frame was sent. The app sends one `59`-second frame; the longer capture leaves room for starting and stopping the run.     
 
 ![malware](/assets/images/235/photo_2026-11-18_19-31-44.jpg){:class="img-responsive"}   
 
@@ -994,7 +994,7 @@ ffmpeg -y -i capture.mp4 -an -vf 'crop=48:48,format=gray,scale=1:1:flags=area,fp
 
 ![malware](/assets/images/235/2026-11-18_19-50.png){:class="img-responsive"}   
 
-A physical success is the expected `MEOW` frame, CRC `0ead`, and the `Meow-meow!` output. The camera recording must produce this result before the physical path is reported as verified.     
+So, as you can see, a physical run succeeded: the camera recording produced the expected `MEOW` frame, CRC `0x0ead`, and `Meow-meow!` output. The receiver found the frame at `7.87` s and estimated a `0.2490` s half-bit. This confirms one physical transmission; of course, repeated runs are needed to estimate reliability. I repeated it three times and everything works. Perfect! Meow =^..^=!     
 
 ### for blue teams
 
@@ -1002,7 +1002,7 @@ The Android app keeps the screen awake and changes the wide gray signal patch wh
 
 ### conclusion
 
-The synthetic trace, generated MP4 and Android screenrecord reach the C receiver, pass CRC validation, and trigger the linked assembly print handler. My next step is to record the phone display with the ThinkPad camera and run the same decoder on that video.     
+The synthetic trace, generated MP4, Android screenrecord, and ThinkPad camera recording all reach the C receiver and pass CRC validation. The physical recording also triggers the linked assembly print handler, demonstrating the Android-screen-to-camera-to-Linux path end to end.     
 
 Of course, I'm not the first one to come up with this; similar concepts are described in [VisiSploit](https://arxiv.org/abs/1607.03946) and [BRIGHTNESS](https://arxiv.org/abs/2002.01078).    
 
