@@ -20,7 +20,7 @@ Hello, cybersecurity enthusiasts and white hackers!
 
 ![malware](/assets/images/235/photo_2026-11-15_21-37-00.jpg){:class="img-responsive"}    
 
-In my [previous DSP research](/malware/2026/05/25/malware-tricks-56.html), we encoded bytes as sound. Welcome to a new series: **Optical payload delivery in Malware Development**. Over the next few parts, I will try to explore how to treat shellcode not as acoustic channel, but as an optical. This part sends a fixed `MEOW` frame from an Android screen as timed brightness changes. Since I have only my Thinkpad machines, a ThinkPad camera records the display; a C receiver checks the frame and dispatches `MEOW` to a linked Linux x86-64 assembly function that prints `Meow-meow!`.     
+In my [previous DSP research](/malware/2026/05/24/malware-tricks-56.html), we encoded bytes as sound. Welcome to a new series: **Optical payload delivery in Malware Development**. Over the next few parts, I will try to explore how to treat shellcode not as acoustic channel, but as an optical. This part sends a fixed `MEOW` frame from an Android screen as timed brightness changes. Since I have only my Thinkpad machines, a ThinkPad camera records the display; a C receiver checks the frame and dispatches `MEOW` to a linked Linux x86-64 assembly function that prints `Meow-meow!`.     
 
 As usual, let's imagine that the Android app uses no permissions and makes no network connection. The receiver gets the video from the ThinkPad camera, FFmpeg extracts grayscale samples, and the C program validates the frame's CRC before calling the fixed handler. The received bytes are a four-byte identifier; the receiver does not execute them as machine code yet.      
 
