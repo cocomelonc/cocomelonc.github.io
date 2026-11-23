@@ -70,7 +70,7 @@ Bytes are sent most significant bit first. CRC32/IEEE covers the two length byte
 
 ### mathematical model and timing
 
-The Android app selects a gray level \\(u(t)\in\{80,128,176\}\\). Gray \\(128\\) is the idle and guard level. Manchester bits use levels 80 and 176:
+The Android app selects a gray level $$u(t)\in\{80,128,176\}$$. Gray $$128$$ is the idle and guard level. Manchester bits use levels 80 and 176:
 
 ```bash
 bit 0: 80 -> 176
@@ -78,7 +78,7 @@ bit 1: 176 -> 80
           167 ms per half-bit
 ```
 
-Let the grayscale camera frame be \\(I_k(x,y)\\), and let \\(R\\) be the 48 by 48 square at its center. The C sampler turns each video frame into one value:
+Let the grayscale camera frame be $$I_k(x,y)$$, and let $$R$$ be the 48 by 48 square at its center. The C sampler turns each video frame into one value:
 
 $$
 z_k = \frac{1}{|R|}\sum_{(x,y)\in R} I_k(x,y), \qquad |R|=48^2.
@@ -90,7 +90,7 @@ $$
 D_i = \bar z_{i,0} - \bar z_{i,1}.
 $$
 
-With the mapping above, \\(D_i\\) is positive for bit `1` and negative for bit `0`. If the noiseless light and dark means differ by \\(\Delta\\) and the error in each half-window is bounded by \\(\eta\\), then the decision sign is preserved when \\(\Delta>2\eta\\). This implementation also rejects a pair when \\(|D_i|\\) is below 6 gray levels, so a sufficient condition for acceptance with the correct sign is
+With the mapping above, $$D_i$$ is positive for bit `1` and negative for bit `0`. If the noiseless light and dark means differ by $$\Delta$$ and the error in each half-window is bounded by $$\eta$$, then the decision sign is preserved when $$\Delta>2\eta$$. This implementation also rejects a pair when $$|D_i|$$ is below 6 gray levels, so a sufficient condition for acceptance with the correct sign is
 
 $$
 \Delta > 6 + 2\eta.
@@ -98,7 +98,7 @@ $$
 
 This is a sufficient condition for the decoder's decision, not a measurement of my ThinkPad camera. Part 1 decoded the physical 250 ms frame with an estimated 0.2490 s half-bit. This part uses 167 ms halves, so the new timing and longer frame must be checked against a fresh camera recording.
 
-The camera stream is normalized to \\(f_s=30\\) samples per second. With a half-bit duration \\(T_h=0.167\,\mathrm{s}\\), the nominal number of samples per half is
+The camera stream is normalized to $$f_s=30$$ samples per second. With a half-bit duration $$T_h=0.167\,\mathrm{s}$$, the nominal number of samples per half is
 
 $$
 N_h = f_s T_h = 30 \cdot 0.167 \approx 5.01.
@@ -110,9 +110,9 @@ $$
 |e_j| + \frac{T_e}{2} + T_r + T_d < 0.2 T_h = 33.4\text{ ms},
 $$
 
-where \\(e_j\\) is the sample-center error, \\(T_e\\) is camera exposure, \\(T_r\\) bounds display response, and \\(T_d\\) includes capture and resampling error. The implementation searches a constant-rate range; it does not read the camera's exposure or prove that this inequality holds. That is why the webcam recording is part of the experiment.
+where $$e_j$$ is the sample-center error, $$T_e$$ is camera exposure, $$T_r$$ bounds display response, and $$T_d$$ includes capture and resampling error. The implementation searches a constant-rate range; it does not read the camera's exposure or prove that this inequality holds. That is why the webcam recording is part of the experiment.
 
-For a JSON payload of \\(L\\) bytes, a frame contains \\(N=L+13\\) bytes: six preamble/sync bytes, two length bytes, \\(L\\) payload bytes, one XOR byte and four CRC bytes. Each byte has \\(16\\) Manchester half-bits. With five seconds of leading guard and two seconds of trailing guard, the transmission duration is
+For a JSON payload of $$L$$ bytes, a frame contains $$N=L+13$$ bytes: six preamble/sync bytes, two length bytes, $$L$$ payload bytes, one XOR byte and four CRC bytes. Each byte has $$16$$ Manchester half-bits. With five seconds of leading guard and two seconds of trailing guard, the transmission duration is
 
 $$
 \begin{aligned}
