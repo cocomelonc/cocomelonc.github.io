@@ -885,6 +885,8 @@ Frame sent:
 
 ![malware](/assets/images/236/photo_2026-11-23_02-28-11.jpg){:class="img-responsive"}    
 
+![malware](/assets/images/236/photo_2026-11-23_02-41-49-2.jpg){:class="img-responsive"}    
+
 ![malware](/assets/images/236/photo_2026-11-23_02-41-49.jpg){:class="img-responsive"}    
 
 ![malware](/assets/images/236/2026-11-23_02-42.png){:class="img-responsive"}    
