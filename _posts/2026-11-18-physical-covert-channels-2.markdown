@@ -81,7 +81,7 @@ bit 1: 176 -> 80
 Let the grayscale camera frame be $$I_k(x,y)$$, and let $$R$$ be the 48 by 48 square at its center. The C sampler turns each video frame into one value:
 
 $$
-z_k = \frac{1}{|R|}\sum_{(x,y)\in R} I_k(x,y), \qquad |R|=48^2.
+z_k = \frac{1}{\lvert R\rvert}\sum_{(x,y)\in R} I_k(x,y), \qquad \lvert R\rvert=48^2.
 $$
 
 For a transmitted bit, the receiver averages samples from the central 60 percent of each half and computes
@@ -90,7 +90,7 @@ $$
 D_i = \bar z_{i,0} - \bar z_{i,1}.
 $$
 
-With the mapping above, $$D_i$$ is positive for bit `1` and negative for bit `0`. If the noiseless light and dark means differ by $$\Delta$$ and the error in each half-window is bounded by $$\eta$$, then the decision sign is preserved when $$\Delta>2\eta$$. This implementation also rejects a pair when $$|D_i|$$ is below 6 gray levels, so a sufficient condition for acceptance with the correct sign is
+With the mapping above, $$D_i$$ is positive for bit `1` and negative for bit `0`. If the noiseless light and dark means differ by $$\Delta$$ and the error in each half-window is bounded by $$\eta$$, then the decision sign is preserved when $$\Delta>2\eta$$. This implementation also rejects a pair when $$\lvert D_i\rvert$$ is below 6 gray levels, so a sufficient condition for acceptance with the correct sign is
 
 $$
 \Delta > 6 + 2\eta.
@@ -107,7 +107,7 @@ $$
 The receiver searches half-bit durations from 4.70 through 5.30 samples and scans the start phase one sample at a time. It averages the central 60 percent of each half to avoid the transition. A sufficient timing condition for those windows to remain inside the transmitted halves is
 
 $$
-|e_j| + \frac{T_e}{2} + T_r + T_d < 0.2 T_h = 33.4\text{ ms},
+\lvert e_j\rvert + \frac{T_e}{2} + T_r + T_d < 0.2 T_h = 33.4\text{ ms},
 $$
 
 where $$e_j$$ is the sample-center error, $$T_e$$ is camera exposure, $$T_r$$ bounds display response, and $$T_d$$ includes capture and resampling error. The implementation searches a constant-rate range; it does not read the camera's exposure or prove that this inequality holds. That is why the webcam recording is part of the experiment.
