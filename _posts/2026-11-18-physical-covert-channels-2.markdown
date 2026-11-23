@@ -940,7 +940,9 @@ In Part 3, I will work on finding the signal patch when it is not centered and o
 
 ### conclusion
 
-This part sends the same nine Android Build fields (infostealer PoC) as a length-prefixed, checksummed optical frame and recovers them with a C receiver. Part 1 established the physical optical path; I still need a complete camera recording to confirm this faster, longer Build JSON frame.
+This part sends the same nine Android Build fields (infostealer PoC) as a length-prefixed, checksummed optical frame and recovers them with a C receiver. Part 1 established the physical optical path; I still need a complete camera recording to confirm this faster, longer Build JSON frame.    
+
+I hope this post is useful for mathematicians, physicists, malware researchers, C and Linux programmers, spreads awareness to the blue teamers of this interesting technique, and adds a weapon to the red teamers arsenal.      
 
 [Malware shellcode delivery via signal series - part 1](/malware/2026/05/24/malware-tricks-56.html)     
 [Optical payload velivery - part 1](/research/2026/11/14/physical-covert-channels-1.html)    

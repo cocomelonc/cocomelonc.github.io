@@ -1006,6 +1006,8 @@ The synthetic trace, generated MP4, Android screenrecord, and ThinkPad camera re
 
 Of course, I'm not the first one to come up with this; similar concepts are described in [VisiSploit](https://arxiv.org/abs/1607.03946) and [BRIGHTNESS](https://arxiv.org/abs/2002.01078).    
 
+I hope this post is useful for mathematicians, physicists, malware researchers, C and Linux programmers, spreads awareness to the blue teamers of this interesting technique, and adds a weapon to the red teamers arsenal.      
+
 [Manchester code](https://en.wikipedia.org/wiki/Manchester_code)    
 [FFmpeg filter documentation](https://ffmpeg.org/ffmpeg-filters.html)    
 [source code in github](https://github.com/cocomelonc/optical-malware-delivery-poc)     
